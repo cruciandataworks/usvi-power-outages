@@ -14,7 +14,9 @@ name: Power outages refresh
 
 on:
   schedule:
-    - cron: "*/15 * * * *"   # every 15 minutes (GitHub may start runs a few minutes late)
+    # every 15 minutes, off the quarter hour: GitHub delays or drops scheduled runs most
+    # often at :00, :15, :30 and :45, when the most workflows start
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
     inputs:
       test_failure:
