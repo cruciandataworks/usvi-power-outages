@@ -95,11 +95,13 @@ jobs:
           gh release upload lake /tmp/lake.tar.gz --clobber
 
       # GitHub pauses scheduled workflows in repositories with no commits for 60 days.
-      # One small commit a day (the first run after 00:00 UTC, or any manual run) prevents that.
+      # One small commit a day (the first automatic run of the day, or any manual run) prevents that.
       - name: Daily data commit
         run: |
-          if [ "$AUTO_RUN" = "true" ] && [ "$(date -u +%H)" != "00" ]; then exit 0; fi
-          if [ "$AUTO_RUN" = "true" ] && [ "$(date -u +%M)" -ge 15 ]; then exit 0; fi
+          # scheduled and chained runs commit only once a day; manual runs always do
+          git fetch -q --deepen=200 || true   # the checkout has only the latest commit
+          if [ "${{ github.event_name == 'schedule' || inputs.chained == true }}" = "true" ] && \
+             [ "$(git log -1 --author=cdw-bot --format=%cd --date=format:%F)" = "$(date -u +%F)" ]; then exit 0; fi
           git config user.name "cdw-bot"
           git config user.email "hello@cruciandataworks.com"
           git add dashboard/data/summary.json
