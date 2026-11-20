@@ -50,6 +50,9 @@ jobs:
       # chained runs count as automatic runs, like scheduled ones
       AUTO_RUN: ${{ github.event_name == 'schedule' || inputs.chained == true }}
     steps:
+      - name: Note the start time
+        run: echo "STARTED=$(date -u +%s)" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v5
 
       - uses: actions/setup-python@v6
@@ -122,13 +125,11 @@ jobs:
       # Set the repository variable CHAIN_RUNS to "false" to turn this off.
       - name: Start the next run if the schedule is not firing
         if: ${{ !cancelled() && vars.CHAIN_RUNS != 'false' && github.event_name != 'schedule' }}
-        env:
-          STARTED: ${{ github.run_started_at }}
         run: |
           since=$(date -u -d '-40 minutes' +%Y-%m-%dT%H:%M:%SZ)
           recent=$(gh run list --workflow refresh.yml --event schedule --created ">$since" --json databaseId -q length)
           if [ "$recent" != "0" ]; then echo "The schedule is firing; no chained run needed."; exit 0; fi
-          wait=$(( $(date -u -d "$STARTED" +%s) + 900 - $(date -u +%s) ))
+          wait=$(( STARTED + 900 - $(date -u +%s) ))
           if [ "$wait" -gt 0 ]; then echo "Waiting ${wait}s"; sleep "$wait"; fi
           gh workflow run refresh.yml --ref main -f chained=true
           echo "Started the next run."
