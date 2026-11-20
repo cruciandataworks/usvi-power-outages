@@ -1,0 +1,12 @@
+version: 2
+seeds:
+  - name: district_reference
+    description: >
+      The two grids WAPA runs. STX is St. Croix; STTJ is St. Thomas, St. John and Water Island,
+      one connected grid. The reference size is each grid's largest observed outage, which
+      VI Update uses as the district's size for the 25% and 80% event thresholds.
+    columns:
+      - name: district
+        tests: [unique, not_null]
+      - name: reference_customers
+        tests: [not_null]

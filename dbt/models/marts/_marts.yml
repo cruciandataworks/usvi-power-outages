@@ -1,0 +1,45 @@
+version: 2
+models:
+  - name: mart_outage_daily
+    description: One row per grid per AST day, rebuilt from the raw polls by VI Update's rules.
+    tests:
+      - unique_combination: {arguments: {columns: [date_ast, district]}}
+    columns:
+      - name: district
+        tests: [not_null, {accepted_values: {arguments: {values: [STX, STTJ]}}}]
+      - name: covered_hours
+        tests: [not_null]
+      - name: customer_hours
+        tests: [not_null]
+  - name: mart_outage_monthly
+    columns:
+      - name: month
+        tests: [not_null]
+  - name: mart_outage_events
+    description: District-wide (80%+) and major (25%+) outages.
+    columns:
+      - name: class
+        tests: [{accepted_values: {arguments: {values: [districtwide_80pct, major_25pct]}}}]
+      - name: peak_out
+        tests: [not_null]
+      - name: ends_by
+        tests: [{accepted_values: {arguments: {values: [observed_drop, gap, capture_end]}}}]
+  - name: mart_records
+    columns:
+      - name: record_id
+        tests: [unique, not_null]
+  - name: mart_area_customer_hours
+    columns:
+      - name: customer_hours
+        tests: [not_null]
+  - name: mart_gaps
+    columns:
+      - name: kind
+        tests: [{accepted_values: {arguments: {values: [MISSING, STALE]}}}]
+  - name: mart_current
+    tests:
+      - unique_combination: {arguments: {columns: [district]}}
+  - name: mart_alerts
+    columns:
+      - name: alert_key
+        tests: [unique, not_null]

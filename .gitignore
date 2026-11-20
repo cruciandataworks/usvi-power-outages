@@ -1,0 +1,7 @@
+lake/
+warehouse/
+.venv/
+__pycache__/
+dbt/target/
+dbt/logs/
+dbt/.user.yml

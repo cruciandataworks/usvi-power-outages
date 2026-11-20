@@ -1,0 +1,38 @@
+name: usvi_outages
+version: "1.0.0"
+config-version: 2
+profile: usvi_outages
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+
+models:
+  usvi_outages:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+
+seeds:
+  usvi_outages:
+    +schema: reference
+
+vars:
+  # VI Update's rules (rules/*.md in the Zenodo package), used unchanged so our numbers
+  # can be checked against theirs
+  interval_cap_min: 15        # one poll stands for at most 15 minutes
+  stale_after_min: 30         # WAPA's update time this far behind the poll = stale
+  missing_after_min: 12       # more than this between saved polls = a gap
+  dip_merge_min: 30           # two outage runs merge across a dip shorter than this
+  # archive / live boundary: VI Update's capture ends 7 Nov 2026, ours starts 20 Nov
+  archive_end_utc: "2026-11-07 14:54:03.999"
+  # alerts: how long WAPA's feed may be stale, and how many polls in a row may fail
+  stale_alert_min: 60
+  max_consecutive_failures: 4

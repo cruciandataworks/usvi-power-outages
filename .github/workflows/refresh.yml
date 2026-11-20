@@ -1,0 +1,128 @@
+# Runs the whole pipeline every 15 minutes. Each run polls WAPA's outage map three
+# times, five minutes apart, so the record keeps VI Update's 5-minute rhythm.
+#
+# Where the data lives between runs (none of it is in git):
+#   lake/archive  VI Update's archive, rebuilt from Zenodo if missing. It never changes,
+#                 so it is kept in the Actions cache.
+#   lake/live     our own polls + lake/_state (map-point lookups). Small and growing,
+#                 stored as one file on a GitHub release called "lake": downloaded at the
+#                 start, uploaded again at the end.
+#
+# Cost: about 12 minutes of runner time per run. That is free and unlimited in a public
+# repository; in a private one it would use the free 2,000 minutes in about two days.
+name: Power outages refresh
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"   # every 15 minutes (GitHub may start runs a few minutes late)
+  workflow_dispatch:
+    inputs:
+      test_failure:
+        description: "Fail on purpose to test the failure alert"
+        type: boolean
+        default: false
+      polls:
+        description: "How many times to poll WAPA in this run"
+        default: "3"
+
+permissions:
+  contents: write   # upload the lake to the release, daily data commit
+  issues: write     # alert issues
+
+concurrency:        # never let two runs write the lake at the same time
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}   # empty until the secret exists
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore VI Update's archive from the cache
+        uses: actions/cache@v4
+        with:
+          path: lake/archive
+          key: zenodo-24094228-v1
+
+      - name: Download our live polls from the "lake" release
+        run: |
+          if gh release download lake --pattern lake.tar.gz --dir /tmp 2>/dev/null; then
+            tar -xzf /tmp/lake.tar.gz
+            echo "Restored live lake: $(du -sh lake/live | cut -f1)"
+          else
+            echo "::warning::No lake release found - starting the live record from scratch."
+          fi
+
+      - name: Run pipeline (archive, poll, load, dbt build, export, alerts)
+        env:
+          TEST_FAILURE: ${{ inputs.test_failure }}
+          POLLS: ${{ inputs.polls || '3' }}
+          POLL_INTERVAL: "300"
+          ALERT_ASSIGNEE: ${{ vars.ALERT_ASSIGNEE }}
+        run: python run_pipeline.py
+
+      - name: Upload the live lake back to the release
+        run: |
+          tar -czf /tmp/lake.tar.gz lake/live lake/_state
+          gh release view lake >/dev/null 2>&1 || \
+            gh release create lake --title "Data lake (auto-updated)" \
+              --notes "Our own polls of WAPA's outage map (Parquet). Replaced every run. Deleting it loses every poll since the pipeline started; VI Update's archive is rebuilt from Zenodo."
+          gh release upload lake /tmp/lake.tar.gz --clobber
+
+      # GitHub pauses scheduled workflows in repositories with no commits for 60 days.
+      # One small commit a day (the first run after 00:00 UTC, or any manual run) prevents that.
+      - name: Daily data commit
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%H)" != "00" ]; then exit 0; fi
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%M)" -ge 15 ]; then exit 0; fi
+          git config user.name "cdw-bot"
+          git config user.email "hello@cruciandataworks.com"
+          git add dashboard/data/summary.json
+          git diff --cached --quiet || git commit -m "Daily power outages snapshot"
+          git push
+
+      # Publish the refreshed dashboard to cruciandataworks.com (Hostinger) over FTP.
+      # Skipped until the FTP secrets are added in Settings > Secrets and variables > Actions.
+      - name: Upload dashboard to Hostinger
+        if: ${{ env.FTP_SERVER != '' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dashboard/
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/projects/power-outages/' }}
+
+      # If any step fails, open (or update) one "refresh failed" issue. Outage and
+      # stale-map alerts are separate issues opened by step 6 of the pipeline.
+      - name: Alert on failure
+        if: ${{ failure() }}
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ASSIGNEE: ${{ vars.ALERT_ASSIGNEE || 'OrlandoSpears' }}
+        run: |
+          gh label create refresh-failure --color C8553D --description "Scheduled refresh failed" 2>/dev/null || true
+          body="The power outages refresh failed on $(date -u '+%Y-%m-%d %H:%M UTC').
+
+          Run log: $RUN_URL
+
+          The website still shows the last good data. Close this issue once the cause is fixed."
+          open=$(gh issue list --label refresh-failure --state open --json number -q '.[0].number')
+          if [ -n "$open" ]; then
+            gh issue comment "$open" --body "$body"
+          else
+            gh issue create --title "Power outages refresh failed" --label refresh-failure --assignee "$ASSIGNEE" --body "$body"
+          fi

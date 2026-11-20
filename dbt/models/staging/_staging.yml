@@ -1,0 +1,23 @@
+version: 2
+models:
+  - name: stg_polls
+    columns:
+      - name: poll_utc
+        tests: [unique, not_null]
+      - name: source
+        tests: [{accepted_values: {arguments: {values: [archive, live]}}}]
+  - name: stg_sightings
+    tests:
+      - unique_combination: {arguments: {columns: [poll_utc, record_id]}}
+    columns:
+      - name: record_id
+        tests: [not_null]
+      - name: customers_out_now
+        tests: [not_null]
+  - name: stg_point_places
+    tests:
+      - unique_combination: {arguments: {columns: [lat, lng]}}
+  - name: stg_hourly_history
+    columns:
+      - name: hour_ast
+        tests: [unique, not_null]

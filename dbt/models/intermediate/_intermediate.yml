@@ -1,0 +1,18 @@
+version: 2
+models:
+  - name: int_record_district
+    columns:
+      - name: record_id
+        tests: [unique, not_null]
+      - name: district
+        tests: [{accepted_values: {arguments: {values: [STX, STTJ]}}}]
+  - name: int_poll_status
+    columns:
+      - name: poll_utc
+        tests: [unique, not_null]
+      - name: interval_min
+        tests: [not_null]
+  - name: int_poll_district
+    columns:
+      - name: hours
+        tests: [not_null]

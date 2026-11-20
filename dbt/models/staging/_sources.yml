@@ -1,0 +1,25 @@
+version: 2
+sources:
+  - name: raw
+    description: Loaded by pipeline/step3_load.py from the Parquet lake.
+    tables:
+      - name: polls
+        description: One row per capture of WAPA's outageSummary endpoint (archive + live).
+      - name: sightings
+        description: One row per outage record per poll, from WAPA's outages endpoint.
+      - name: hourly_history
+        description: WAPA's own territory-wide customers-out count for each hour.
+      - name: poll_log
+        description: Every request our live poller made, including failures.
+      - name: point_places
+        description: Each distinct map point placed in a Census 2023 county subdivision.
+      - name: ref_daily
+        description: VI Update's daily table (labeled/daily.csv), kept to check our rebuild.
+      - name: ref_events
+        description: VI Update's events table (labeled/events.csv).
+      - name: ref_records
+        description: VI Update's district for each record (labeled/records.csv).
+      - name: ref_holes
+        description: VI Update's gaps, stale runs and partial polls (labeled/holes.csv).
+      - name: source_health
+        description: The collectors' health file.

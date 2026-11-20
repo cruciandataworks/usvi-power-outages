@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USVI Power Outages · Crucian Data Works</title>
+<meta name="description" content="How often the power goes out in the U.S. Virgin Islands: customers out right now, every district-wide outage since March 2026, and customer-hours by area, from WAPA's public outage map. A Crucian Data Works portfolio project.">
+<link rel="icon" href="cdw-icon-app-tile.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="power.css">
+</head>
+<body>
+<div class="demo-bar" role="note">
+  <span class="pill">Portfolio project 04</span>
+  <span>Built from WAPA's public outage map and VI Update's open archive of it. Not an official WAPA product. To report an outage call WAPA at <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">viwapa.vi</a>.</span>
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="title">
+      <p class="eyebrow">U.S. Virgin Islands · Power outages</p>
+      <h1>How often does the power go out?</h1>
+      <p class="sub" id="updated">Loading…</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="alerts" aria-label="Active alerts" id="alerts"></section>
+
+  <section class="kpis" aria-label="Right now" id="kpis"></section>
+
+  <section class="card finding-card">
+    <p class="eyebrow">What the record shows</p>
+    <p class="big" id="finding"></p>
+    <div class="facts" id="facts"></div>
+  </section>
+
+  <section class="card">
+    <header class="card-h row">
+      <div><h2>Worst moment of each day</h2><p>Highest share of the district's customers out at once, per day (AST) · dashed lines mark a major (25%) and a district-wide (80%) outage</p></div>
+      <div class="toggle" role="group" aria-label="District" id="dailyToggle">
+        <button data-k="STTJ" aria-pressed="true">St. Thomas–St. John</button>
+        <button data-k="STX" aria-pressed="false">St. Croix</button>
+      </div>
+    </header>
+    <div class="chart tall"><canvas id="cDaily" aria-label="Daily peak share of customers out"></canvas></div>
+    <p class="fine-inline" id="dailyNote"></p>
+  </section>
+
+  <section class="grid two">
+    <article class="card">
+      <header class="card-h"><h2>Hours without power per customer, by month</h2><p>Customer-hours out divided by the district's customers · shaded months were only partly captured</p></header>
+      <div class="chart"><canvas id="cMonthly" aria-label="Monthly hours without power per customer by district"></canvas></div>
+      <p class="fine-inline" id="monthlyNote"></p>
+    </article>
+    <article class="card">
+      <header class="card-h"><h2>The last 48 hours, territory-wide</h2><p>Customers out each hour, from WAPA's own history on the map · plus our own polls</p></header>
+      <div class="chart"><canvas id="cRecent" aria-label="Customers out over the last 48 hours"></canvas></div>
+      <p class="fine-inline" id="recentNote"></p>
+    </article>
+  </section>
+
+  <section class="card">
+    <header class="card-h row">
+      <div><h2>Every major outage since March</h2><p>Times in AST · major means 25% or more of a district out, district-wide means 80% or more</p></div>
+      <div class="toggle" role="group" aria-label="Outage class" id="eventToggle">
+        <button data-k="districtwide_80pct" aria-pressed="true">District-wide</button>
+        <button data-k="major_25pct" aria-pressed="false">Major</button>
+      </div>
+    </header>
+    <div class="table-wrap">
+      <table class="tbl" id="tEvents">
+        <thead><tr><th>District</th><th>Started</th><th class="n">Lasted</th><th class="n">Peak out</th><th class="n">Customer-hours</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="more-row"><button class="more" id="eventMore" type="button"></button></div>
+    <p class="fine-inline" id="eventNote"></p>
+  </section>
+
+  <section class="grid two-uneven">
+    <article class="card">
+      <header class="card-h"><h2>Where the hours were lost</h2><p>Customer-hours out by Census county subdivision, March to November 2026</p></header>
+      <ul class="areas" id="areas"></ul>
+      <p class="fine-inline">Each outage on WAPA's map is placed by its map point. A few outages have no usable point and are shown as unplaced.</p>
+    </article>
+    <article class="card">
+      <header class="card-h"><h2>Why did it go out?</h2><p>Cause WAPA gave for each outage on the map</p></header>
+      <div class="cause-hero" id="causeHero"></div>
+      <ul class="causes" id="causes"></ul>
+      <p class="fine-inline">Cause labels are shown exactly as WAPA lists them. Without causes for most outages, the record shows where and how long the power was out, but not why.</p>
+    </article>
+  </section>
+
+  <section class="grid two">
+    <article class="card">
+      <header class="card-h"><h2>Right now on WAPA's map</h2><p>Largest outages currently listed</p></header>
+      <div class="table-wrap">
+        <table class="tbl" id="tNow">
+          <thead><tr><th>Area</th><th class="n">Customers</th><th class="n">On the map</th><th>Cause</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </article>
+    <article class="card">
+      <header class="card-h"><h2>Is the record complete?</h2><p>Gaps of 30 minutes or more, and how this rebuild compares with VI Update's published figures</p></header>
+      <div class="checks" id="checks"></div>
+      <div class="table-wrap">
+        <table class="tbl" id="tGaps">
+          <thead><tr><th>Gap</th><th class="n">Hours</th><th>Why</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <section class="card how" id="how">
+    <div>
+      <p class="eyebrow">How this was built</p>
+      <h2>An open archive, a live collector and one tested model</h2>
+      <p>From March to November 2026 VI Update saved WAPA's outage map every five minutes and published the full record as open data. This pipeline downloads that archive and checks its fingerprint, then keeps the record going by polling WAPA's map itself. Python lands both into a Parquet data lake, DuckDB and dbt rebuild every number on this page with tested SQL, and the rebuild is checked against VI Update's own published tables on every run. Names that could identify a household are withheld before anything is stored.</p>
+      <p class="finding" id="howFinding"></p>
+    </div>
+    <ol>
+      <li><b>1</b>Download VI Update's archive from Zenodo and verify it</li>
+      <li><b>2</b>Poll WAPA's outage map (three times per run)</li>
+      <li><b>3</b>Load the lake into DuckDB and place each outage on the Census map</li>
+      <li><b>4</b>Model and test with dbt, including the match to VI Update</li>
+      <li><b>5</b>Export JSON for this page</li>
+      <li><b>6</b>Open, update or close alert issues on GitHub</li>
+    </ol>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div class="brand">
+      <img src="cdw-icon-reverse.svg" alt="" width="36" height="36">
+      <div><b>Crucian Data Works</b><span>Data engineering from St. Croix</span></div>
+    </div>
+    <div class="contact">Roger Simon · <a href="mailto:hello@cruciandataworks.com">hello@cruciandataworks.com</a></div>
+  </div>
+  <p class="wrap fine">Data: March to November 2026 from <a href="https://doi.org/10.5281/zenodo.24094228" target="_blank" rel="noopener">The WAPA Outage Record</a> by Brian Louden, VI Update (CC0), described in <a href="https://zenodo.org/records/24094226" target="_blank" rel="noopener">VI Update's report</a>; since then from the <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">Virgin Islands Water and Power Authority</a> outage map. District customer counts are the ones VI Update uses. WAPA's map is the original source and can lag or miss outages; this page is an independent analysis. <span id="built"></span></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

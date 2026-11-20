@@ -1,0 +1,7 @@
+usvi_outages:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../warehouse/outages.duckdb
+      threads: 4
