@@ -119,18 +119,20 @@ jobs:
           server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/projects/power-outages/' }}
 
       # Backup for GitHub's scheduler, which can take a long time to start firing in a
-      # new repository (and drops runs when it is busy). Unless a scheduled run has
-      # started in the last 40 minutes, wait until 15 minutes after this run began, then
-      # start the next run. Once the schedule fires reliably, the chain stops by itself.
+      # new repository and sometimes drops runs. Wait until 15 minutes after this run
+      # began, then start the next run, unless any newer run of this workflow has started
+      # in the meantime (a scheduled run, a manual run or another chain). So there is
+      # only ever one chain, and once the schedule fires, the chain stops by itself.
       # Set the repository variable CHAIN_RUNS to "false" to turn this off.
-      - name: Start the next run if the schedule is not firing
+      - name: Start the next run if nothing newer has started
         if: ${{ !cancelled() && vars.CHAIN_RUNS != 'false' && github.event_name != 'schedule' }}
         run: |
-          since=$(date -u -d '-40 minutes' +%Y-%m-%dT%H:%M:%SZ)
-          recent=$(gh run list --workflow refresh.yml --event schedule --created ">$since" --json databaseId -q length)
-          if [ "$recent" != "0" ]; then echo "The schedule is firing; no chained run needed."; exit 0; fi
           wait=$(( STARTED + 900 - $(date -u +%s) ))
           if [ "$wait" -gt 0 ]; then echo "Waiting ${wait}s"; sleep "$wait"; fi
+          created=$(gh run view ${{ github.run_id }} --json createdAt -q .createdAt)
+          newer=$(gh run list --workflow refresh.yml --created ">$created" --json databaseId \
+                  -q '[.[] | select(.databaseId != ${{ github.run_id }})] | length')
+          if [ "$newer" != "0" ]; then echo "A newer run has started; it carries on from here."; exit 0; fi
           gh workflow run refresh.yml --ref main -f chained=true
           echo "Started the next run."
 

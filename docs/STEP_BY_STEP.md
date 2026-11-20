@@ -345,7 +345,7 @@ The workflow also:
 - **Commits once a day.** It commits `summary.json` once a day, because GitHub pauses schedules in repositories with no commits for 60 days.
 - **Uploads the dashboard.** It sends the dashboard to Hostinger over FTP once the FTP secrets are set.
 - **Reports failures.** It opens a `refresh-failure` issue if a run fails.
-- **Has a backup for the scheduler.** The schedule runs at minutes 7, 22, 37 and 52, because GitHub delays or drops scheduled runs most often on the quarter hour. GitHub can also take a long time to start firing schedules in a new repository. So unless a scheduled run has started in the last 40 minutes, each run waits until 15 minutes after it began and then starts the next one itself (`chained=true`). Once the schedule fires reliably, the chain stops on its own. Set the repository variable `CHAIN_RUNS` to `false` to turn the backup off.
+- **Has a backup for the scheduler.** The schedule runs at minutes 7, 22, 37 and 52, because GitHub delays or drops scheduled runs most often on the quarter hour. GitHub can also take a long time to start firing schedules in a new repository. So each run that was not started by the schedule waits until 15 minutes after it began and then starts the next one itself (`chained=true`). It first checks whether any newer run has started in the meantime (a scheduled run, a manual run or another chain); if one has, it stops. That keeps only one chain going, and once the schedule fires, the chain ends on its own. Set the repository variable `CHAIN_RUNS` to `false` to turn the backup off.
 
 ### Why the repository must be public
 
