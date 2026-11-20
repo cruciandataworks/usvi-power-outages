@@ -26,10 +26,15 @@ on:
       polls:
         description: "How many times to poll WAPA in this run"
         default: "3"
+      chained:
+        description: "Started by the previous run (the backup for GitHub's scheduler)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # upload the lake to the release, daily data commit
   issues: write     # alert issues
+  actions: write    # start the next run when GitHub's scheduler is not firing
 
 concurrency:        # never let two runs write the lake at the same time
   group: refresh
@@ -42,6 +47,8 @@ jobs:
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}   # empty until the secret exists
       GH_TOKEN: ${{ github.token }}
+      # chained runs count as automatic runs, like scheduled ones
+      AUTO_RUN: ${{ github.event_name == 'schedule' || inputs.chained == true }}
     steps:
       - uses: actions/checkout@v5
 
@@ -88,8 +95,8 @@ jobs:
       # One small commit a day (the first run after 00:00 UTC, or any manual run) prevents that.
       - name: Daily data commit
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%H)" != "00" ]; then exit 0; fi
-          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%M)" -ge 15 ]; then exit 0; fi
+          if [ "$AUTO_RUN" = "true" ] && [ "$(date -u +%H)" != "00" ]; then exit 0; fi
+          if [ "$AUTO_RUN" = "true" ] && [ "$(date -u +%M)" -ge 15 ]; then exit 0; fi
           git config user.name "cdw-bot"
           git config user.email "hello@cruciandataworks.com"
           git add dashboard/data/summary.json
@@ -107,6 +114,24 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dashboard/
           server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/projects/power-outages/' }}
+
+      # Backup for GitHub's scheduler, which can take a long time to start firing in a
+      # new repository (and drops runs when it is busy). Unless a scheduled run has
+      # started in the last 40 minutes, wait until 15 minutes after this run began, then
+      # start the next run. Once the schedule fires reliably, the chain stops by itself.
+      # Set the repository variable CHAIN_RUNS to "false" to turn this off.
+      - name: Start the next run if the schedule is not firing
+        if: ${{ !cancelled() && vars.CHAIN_RUNS != 'false' && github.event_name != 'schedule' }}
+        env:
+          STARTED: ${{ github.run_started_at }}
+        run: |
+          since=$(date -u -d '-40 minutes' +%Y-%m-%dT%H:%M:%SZ)
+          recent=$(gh run list --workflow refresh.yml --event schedule --created ">$since" --json databaseId -q length)
+          if [ "$recent" != "0" ]; then echo "The schedule is firing; no chained run needed."; exit 0; fi
+          wait=$(( $(date -u -d "$STARTED" +%s) + 900 - $(date -u +%s) ))
+          if [ "$wait" -gt 0 ]; then echo "Waiting ${wait}s"; sleep "$wait"; fi
+          gh workflow run refresh.yml --ref main -f chained=true
+          echo "Started the next run."
 
       # If any step fails, open (or update) one "refresh failed" issue. Outage and
       # stale-map alerts are separate issues opened by step 6 of the pipeline.
