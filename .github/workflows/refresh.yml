@@ -147,20 +147,27 @@ jobs:
       # Backup for GitHub's scheduler, which can take a long time to start firing in a
       # new repository and sometimes drops runs. Wait until 15 minutes after this run
       # began, then start the next run, unless any newer run of this workflow has started
-      # in the meantime (a scheduled run, a manual run or another chain). So there is
-      # only ever one chain, and once the schedule fires, the chain stops by itself.
+      # in the meantime (a scheduled run, a manual run or another chain). Every run,
+      # scheduled ones included, takes this step, so whichever run is newest carries the
+      # chain on and there is only ever one chain. A late scheduled run no longer ends it.
+      # Newer runs that were cancelled are ignored, because they never carry it on.
       # Set the repository variable CHAIN_RUNS to "false" to turn this off.
       - name: Start the next run if nothing newer has started
-        if: ${{ !cancelled() && vars.CHAIN_RUNS != 'false' && github.event_name != 'schedule' }}
+        if: ${{ !cancelled() && vars.CHAIN_RUNS != 'false' }}
         run: |
           wait=$(( STARTED + 900 - $(date -u +%s) ))
           if [ "$wait" -gt 0 ]; then echo "Waiting ${wait}s"; sleep "$wait"; fi
           created=$(gh run view ${{ github.run_id }} --json createdAt -q .createdAt)
-          newer=$(gh run list --workflow refresh.yml --created ">$created" --json databaseId \
-                  -q '[.[] | select(.databaseId != ${{ github.run_id }})] | length')
+          newer=$(gh run list --workflow refresh.yml --created ">$created" --limit 50 --json databaseId,conclusion \
+                  -q '[.[] | select(.databaseId != ${{ github.run_id }} and .conclusion != "cancelled")] | length')
           if [ "$newer" != "0" ]; then echo "A newer run has started; it carries on from here."; exit 0; fi
-          gh workflow run refresh.yml --ref main -f chained=true
-          echo "Started the next run."
+          for attempt in 1 2 3; do
+            if gh workflow run refresh.yml --ref main -f chained=true; then echo "Started the next run."; exit 0; fi
+            echo "::warning::Could not start the next run (attempt $attempt of 3); retrying in 30 seconds."
+            sleep 30
+          done
+          echo "::error::Could not start the next run. The schedule and the external trigger will carry on."
+          exit 1
 
       # If any step fails, open (or update) one "refresh failed" issue. Outage and
       # stale-map alerts are separate issues opened by step 6 of the pipeline.
@@ -182,3 +189,16 @@ jobs:
           else
             gh issue create --title "Power outages refresh failed" --label refresh-failure --assignee "$ASSIGNEE" --body "$body"
           fi
+
+      # Once a run succeeds, the cause of any earlier failure is gone, so close the open
+      # "refresh failed" issue with a link to the run that worked.
+      - name: Close the failure issue after a successful run
+        if: ${{ success() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          for n in $(gh issue list --label refresh-failure --state open --json number -q '.[].number'); do
+            gh issue close "$n" --reason completed \
+              --comment "Closed automatically: the refresh succeeded on $(date -u '+%Y-%m-%d %H:%M UTC'). Run log: $RUN_URL"
+          done
