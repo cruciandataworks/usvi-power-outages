@@ -110,8 +110,14 @@ jobs:
 
       # Publish the refreshed dashboard to cruciandataworks.com (Hostinger) over FTP.
       # Skipped until the FTP secrets are added in Settings > Secrets and variables > Actions.
+      #
+      # Hostinger's FTP server sometimes doesn't answer the first connection ("Timeout
+      # (control socket)"), so a failed upload is retried once after a short pause. Only a
+      # failed retry fails the run and opens the "refresh failed" issue.
       - name: Upload dashboard to Hostinger
+        id: upload
         if: ${{ env.FTP_SERVER != '' }}
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -119,6 +125,24 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dashboard/
           server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/projects/power-outages/' }}
+          timeout: 60000
+
+      - name: Wait before retrying the upload
+        if: ${{ steps.upload.outcome == 'failure' }}
+        run: |
+          echo "::warning::The first upload to Hostinger failed; retrying in 60 seconds."
+          sleep 60
+
+      - name: Retry upload to Hostinger
+        if: ${{ steps.upload.outcome == 'failure' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dashboard/
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/projects/power-outages/' }}
+          timeout: 120000
 
       # Backup for GitHub's scheduler, which can take a long time to start firing in a
       # new repository and sometimes drops runs. Wait until 15 minutes after this run
