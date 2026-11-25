@@ -12,6 +12,28 @@
 <link rel="stylesheet" href="power.css">
 </head>
 <body>
+<!-- site-nav: links back to the Crucian Data Works home page -->
+<style>
+.site-nav{background:#0E2A3B;color:#F6F2EA;border-bottom:1px solid rgba(246,242,234,.12);position:sticky;top:0;z-index:50}
+.site-nav-inner{max-width:1200px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.site-nav a{color:#F6F2EA;text-decoration:none}
+.site-nav .sn-home{display:flex;align-items:center;gap:10px;font-family:'Cabinet Grotesk','Satoshi',system-ui,sans-serif;font-weight:800;font-size:15px}
+.site-nav .sn-home img{width:28px;height:28px}
+.site-nav .sn-links{display:flex;gap:8px;align-items:center}
+.site-nav .sn-links a{font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px;border:1px solid rgba(246,242,234,.35)}
+.site-nav .sn-links a:hover,.site-nav .sn-home:hover{color:#E8836B;border-color:#E8836B}
+@media (max-width:560px){.site-nav .sn-home span{display:none}.site-nav .sn-links a{padding:5px 10px;font-size:12.5px}}
+a.brand{color:inherit;text-decoration:none}
+</style>
+<nav class="site-nav" aria-label="Site">
+  <div class="site-nav-inner">
+    <a class="sn-home" href="../../" aria-label="Crucian Data Works home page"><img src="cdw-icon-reverse.svg" alt=""><span>Crucian Data Works</span></a>
+    <div class="sn-links">
+      <a href="../../#projects">&larr; All projects</a>
+      <a href="../../" class="sn-hide-sm">Home</a>
+    </div>
+  </div>
+</nav>
 <div class="demo-bar" role="note">
   <span class="pill">Portfolio project 04</span>
   <span>Built from WAPA's public outage map and VI Update's open archive of it. Not an official WAPA product. To report an outage call WAPA at <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">viwapa.vi</a>.</span>
@@ -137,10 +159,10 @@
 
 <footer class="foot">
   <div class="wrap foot-inner">
-    <div class="brand">
+    <a class="brand" href="../../" title="Crucian Data Works home page">
       <img src="cdw-icon-reverse.svg" alt="" width="36" height="36">
       <div><b>Crucian Data Works</b><span>Data engineering from St. Croix</span></div>
-    </div>
+    </a>
     <div class="contact">Roger Simon · <a href="mailto:hello@cruciandataworks.com">hello@cruciandataworks.com</a></div>
   </div>
   <p class="wrap fine">Data: March to November 2026 from <a href="https://doi.org/10.5281/zenodo.24094228" target="_blank" rel="noopener">The WAPA Outage Record</a> by Brian Louden, VI Update (CC0), described in <a href="https://zenodo.org/records/24094226" target="_blank" rel="noopener">VI Update's report</a>; since then from the <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">Virgin Islands Water and Power Authority</a> outage map. District customer counts are the ones VI Update uses. WAPA's map is the original source and can lag or miss outages; this page is an independent analysis. <span id="built"></span></p>
