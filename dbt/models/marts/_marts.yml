@@ -43,3 +43,28 @@ models:
     columns:
       - name: alert_key
         tests: [unique, not_null]
+  - name: mart_feeder_outages
+    description: One row per whole-feeder outage on WAPA's map.
+    columns:
+      - name: record_id
+        tests: [unique, not_null]
+      - name: feeder
+        tests: [not_null]
+      - name: hours
+        tests: [not_null]
+  - name: mart_feeder_daily
+    description: One row per feeder per AST day it was out.
+    tests:
+      - unique_combination: {arguments: {columns: [district, feeder, date_ast]}}
+  - name: mart_feeder_scorecard
+    description: One row per feeder - outages, hours, power-supply (rotation) load, neighborhoods.
+    tests:
+      - unique_combination: {arguments: {columns: [district, feeder]}}
+    columns:
+      - name: island
+        tests: [not_null]
+  - name: mart_schedule_check
+    description: WAPA's rotation schedule against what WAPA's map showed.
+    columns:
+      - name: outcome
+        tests: [not_null, {accepted_values: {arguments: {values: [on_schedule, ran_long, off_time, not_seen, still_out, upcoming, not_recorded, unscheduled]}}}]

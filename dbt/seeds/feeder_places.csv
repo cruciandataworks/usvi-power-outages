@@ -1,0 +1,528 @@
+district,feeder,island,place,split
+STTJ,5A,St. Thomas,C. E. K. Airport,whole
+STTJ,5A,St. Thomas,Carib Beach,whole
+STTJ,5A,St. Thomas,Emerald Beach,whole
+STTJ,5A,St. Thomas,Beachcomber,whole
+STTJ,5A,St. Thomas,WAPA Fuel Dock,whole
+STTJ,5A,St. Thomas,LPG Station,whole
+STTJ,7E,St. John,STJ Substation / Echo,whole
+STTJ,7E,St. John,Cruz Bay,two_feeders
+STTJ,7E,St. John,East End,whole
+STTJ,7E,St. John,Bordeaux (STJ),two_feeders
+STTJ,7E,St. John,Lameshur,whole
+STTJ,7E,St. John,Northside,whole
+STTJ,7E,St. John,Peterbay,whole
+STTJ,7E,St. John,Caneel Bay,whole
+STTJ,7E,St. John,Gallows Point,whole
+STTJ,7E,St. John,Mongoose Junction,whole
+STTJ,7E,St. John,Coral Bay,whole
+STTJ,7E,St. John,Est. Carolina,whole
+STTJ,7E,St. John,Hansen Bay,whole
+STTJ,7E,St. John,Annaberg,whole
+STTJ,7E,St. John,Maho Bay Estate,whole
+STTJ,9E,St. John,Bordeaux Mountain,two_feeders
+STTJ,9E,St. John,Centerline,whole
+STTJ,9E,St. John,Chocolate Hole,whole
+STTJ,9E,St. John,Contant (STJ),whole
+STTJ,9E,St. John,Cruz Bay,two_feeders
+STTJ,9E,St. John,Enighed,whole
+STTJ,9E,St. John,Fish Bay,whole
+STTJ,9E,St. John,Pastory,whole
+STTJ,9E,St. John,Rendezvous,whole
+STTJ,9E,St. John,South Side,whole
+STTJ,9E,St. John,Westin,whole
+STTJ,9E,St. John,Starfish Market,whole
+STTJ,6A,St. Thomas,Bonne Esperance,whole
+STTJ,6A,St. Thomas,Bordeaux,whole
+STTJ,6A,St. Thomas,Botany Bay,whole
+STTJ,6A,St. Thomas,Bournefield,whole
+STTJ,6A,St. Thomas,Univ. of VI,whole
+STTJ,6A,St. Thomas,Upper Caret Bay,two_feeders
+STTJ,6A,St. Thomas,Contant,three_feeders
+STTJ,6A,St. Thomas,Crown & Hawk,whole
+STTJ,6A,St. Thomas,Crown Mountain,whole
+STTJ,6A,St. Thomas,Fortuna,whole
+STTJ,6A,St. Thomas,Hope,whole
+STTJ,6A,St. Thomas,John Dunkoe,two_feeders
+STTJ,6A,St. Thomas,Lindberg Bay,whole
+STTJ,6A,St. Thomas,Nisky,whole
+STTJ,6A,St. Thomas,Pearl Estate,two_feeders
+STTJ,6A,St. Thomas,Plantation Manor,whole
+STTJ,6A,St. Thomas,Santa Maria,whole
+STTJ,6A,St. Thomas,Scott Free,whole
+STTJ,6A,St. Thomas,Solberg,two_feeders
+STTJ,6A,St. Thomas,Soto Town,two_feeders
+STTJ,6A,St. Thomas,The Towers,whole
+STTJ,6A,St. Thomas,VI Source,whole
+STTJ,6A,St. Thomas,Water Island,whole
+STTJ,6B,St. Thomas,Alexander Farrelly Complex,whole
+STTJ,6B,St. Thomas,A. Deligo Sr. Post Ofc.,whole
+STTJ,6B,St. Thomas,Bluebeard's Castle,whole
+STTJ,6B,St. Thomas,Boy Scott Building,whole
+STTJ,6B,St. Thomas,Market Square,whole
+STTJ,6B,St. Thomas,Channel 2 Station,whole
+STTJ,6B,St. Thomas,A. Watlington Post Office,whole
+STTJ,6B,St. Thomas,Downtown Main Street,two_feeders
+STTJ,6B,St. Thomas,Hassel Island,whole
+STTJ,6B,St. Thomas,Grand Hotel,whole
+STTJ,6B,St. Thomas,Sts. Peter & Paul School,two_feeders
+STTJ,6B,St. Thomas,International Plaza,whole
+STTJ,6B,St. Thomas,Lucinda Millin Home,whole
+STTJ,6B,St. Thomas,Taarneberg,two_feeders
+STTJ,6B,St. Thomas,Theodore Tunick Building,whole
+STTJ,6B,St. Thomas,Garden Street,two_feeders
+STTJ,6B,St. Thomas,Govt. Hill,whole
+STTJ,6B,St. Thomas,Education Dept.,whole
+STTJ,6B,St. Thomas,Drakes Passage,whole
+STTJ,6B,St. Thomas,Frenchtown,whole
+STTJ,6B,St. Thomas,Tortola Wharf,whole
+STTJ,6B,St. Thomas,Waterfront,whole
+STTJ,6B,St. Thomas,Windward Passage,whole
+STTJ,7A,St. Thomas,Agnes Fancy,two_feeders
+STTJ,7A,St. Thomas,Altona & Welgunst,whole
+STTJ,7A,St. Thomas,Bonne Resolution,whole
+STTJ,7A,St. Thomas,Brass View,whole
+STTJ,7A,St. Thomas,Caret Bay,two_feeders
+STTJ,7A,St. Thomas,Contant,three_feeders
+STTJ,7A,St. Thomas,Dorethea,whole
+STTJ,7A,St. Thomas,John Dunkoe,two_feeders
+STTJ,7A,St. Thomas,Hull Bay,whole
+STTJ,7A,St. Thomas,Lerkenlund,whole
+STTJ,7A,St. Thomas,Lilliendahl,whole
+STTJ,7A,St. Thomas,Mahogany Estate,whole
+STTJ,7A,St. Thomas,Marienhoj,whole
+STTJ,7A,St. Thomas,Misgunst,whole
+STTJ,7A,St. Thomas,Mountain Top,whole
+STTJ,7A,St. Thomas,Neltjeberg,whole
+STTJ,7A,St. Thomas,Nisky Center,two_feeders
+STTJ,7A,St. Thomas,Northstar Village,whole
+STTJ,7A,St. Thomas,Pearl Estate,two_feeders
+STTJ,7A,St. Thomas,Solberg,two_feeders
+STTJ,7A,St. Thomas,Sorgenfri,whole
+STTJ,7A,St. Thomas,St Peter Mt. Rd.,whole
+STTJ,7A,St. Thomas,Wesleyan Academy,whole
+STTJ,7A,St. Thomas,Crown Bay Marina,whole
+STTJ,7A,St. Thomas,Austin Babe Monsanto Marine Terminal,whole
+STTJ,7B,St. Thomas,1st Avenue,whole
+STTJ,7B,St. Thomas,5th Street,whole
+STTJ,7B,St. Thomas,7th Street,whole
+STTJ,7B,St. Thomas,8th Street,whole
+STTJ,7B,St. Thomas,9th Street,whole
+STTJ,7B,St. Thomas,10th Street,whole
+STTJ,7B,St. Thomas,Kmart Est. Thomas,whole
+STTJ,7B,St. Thomas,Lockhart Gardens,whole
+STTJ,7B,St. Thomas,Donoe Bypass,two_feeders
+STTJ,7B,St. Thomas,Oswald Harris Court,whole
+STTJ,7B,St. Thomas,PMP Gardens,two_feeders
+STTJ,7B,St. Thomas,Pueblo Longbay,whole
+STTJ,7B,St. Thomas,Raphune Hill,whole
+STTJ,7B,St. Thomas,Sugar Estate,two_feeders
+STTJ,7B,St. Thomas,Vitraco Park,whole
+STTJ,7B,St. Thomas,Wheatley Center,whole
+STTJ,7B,St. Thomas,Estate Thomas,three_feeders
+STTJ,7B,St. Thomas,Flag Hill Comm. Site,whole
+STTJ,7B,St. Thomas,Hometown Gas Station,whole
+STTJ,7B,St. Thomas,Mandahl,two_feeders
+STTJ,7B,St. Thomas,Tabor & Harmony,whole
+STTJ,7C,St. Thomas,Anna's Retreat,two_feeders
+STTJ,7C,St. Thomas,Cassi Hill,two_feeders
+STTJ,7C,St. Thomas,Donoe By Pass,two_feeders
+STTJ,7C,St. Thomas,Emerald Hill,two_feeders
+STTJ,7C,St. Thomas,Foster Plaza,whole
+STTJ,7C,St. Thomas,Four Winds Plaza,whole
+STTJ,7C,St. Thomas,Hidden Valley,whole
+STTJ,7C,St. Thomas,Lima Fire Co.,whole
+STTJ,7C,St. Thomas,Mount Zion Ch. School,whole
+STTJ,7C,St. Thomas,New Tutu,whole
+STTJ,7C,St. Thomas,Old Tutu,whole
+STTJ,7C,St. Thomas,Seventh Day Ch. School,whole
+STTJ,7C,St. Thomas,Smith Bay,two_feeders
+STTJ,7C,St. Thomas,Time Center,whole
+STTJ,7C,St. Thomas,Tutu High Rise,whole
+STTJ,7C,St. Thomas,WAPA Business Office,whole
+STTJ,7C,St. Thomas,TV 2 Station,whole
+STTJ,7C,St. Thomas,Innovative BLDG,whole
+STTJ,7C,St. Thomas,Walgreens,whole
+STTJ,7C,St. Thomas,Coral World,whole
+STTJ,7C,St. Thomas,Frydendahl,whole
+STTJ,7C,St. Thomas,Water Bay Condo,whole
+STTJ,7C,St. Thomas,Margaritaville,off_grid
+STTJ,8A,St. Thomas,Agnes Fancy,two_feeders
+STTJ,8A,St. Thomas,Anna's Fancy,whole
+STTJ,8A,St. Thomas,Contant,three_feeders
+STTJ,8A,St. Thomas,Gotlieb's Gas Station,whole
+STTJ,8A,St. Thomas,Estate Ross,whole
+STTJ,8A,St. Thomas,Garden Street,two_feeders
+STTJ,8A,St. Thomas,Hospital Ground,two_feeders
+STTJ,8A,St. Thomas,Knud Hansen,whole
+STTJ,8A,St. Thomas,Medical Arts Complex,whole
+STTJ,8A,St. Thomas,Lytton's Fancy,whole
+STTJ,8A,St. Thomas,Mahogany Estate,two_feeders
+STTJ,8A,St. Thomas,Nisky Center,two_feeders
+STTJ,8A,St. Thomas,Savan,two_feeders
+STTJ,8A,St. Thomas,Staabiland,whole
+STTJ,8A,St. Thomas,Vester Gade,whole
+STTJ,8A,St. Thomas,Sand Fill,whole
+STTJ,8A,St. Thomas,WSTA,whole
+STTJ,8A,St. Thomas,Silver Dollar,whole
+STTJ,8A,St. Thomas,Back Street,whole
+STTJ,8A,St. Thomas,GERS Bldg.,whole
+STTJ,8A,St. Thomas,Harbor View,whole
+STTJ,8A,St. Thomas,Sts. Peter & Paul School,two_feeders
+STTJ,8A,St. Thomas,Subbase,two_feeders
+STTJ,8A,St. Thomas,Vitelco Bldg.,whole
+STTJ,8B,St. Thomas,Anna's Retreat,two_feeders
+STTJ,8B,St. Thomas,Blackbeard's Castle,whole
+STTJ,8B,St. Thomas,Canaan,whole
+STTJ,8B,St. Thomas,Taarneberg,two_feeders
+STTJ,8B,St. Thomas,Education Street,two_feeders
+STTJ,8B,St. Thomas,Hospital Ground,two_feeders
+STTJ,8B,St. Thomas,J. Antonio Jarvis School,whole
+STTJ,8B,St. Thomas,Lionel Roberts,whole
+STTJ,8B,St. Thomas,Louisenhoj,whole
+STTJ,8B,St. Thomas,Mafolie,whole
+STTJ,8B,St. Thomas,Magen's Bay,whole
+STTJ,8B,St. Thomas,Mahogany Run / Lovenlund,two_feeders
+STTJ,8B,St. Thomas,Peterborg,whole
+STTJ,8B,St. Thomas,Polyberg,whole
+STTJ,8B,St. Thomas,Ross / Taarneberg,whole
+STTJ,8B,St. Thomas,Skyline Drive,whole
+STTJ,8B,St. Thomas,St. Joseph & Rosendahl,whole
+STTJ,8B,St. Thomas,St. Thomas Dairies,whole
+STTJ,8B,St. Thomas,Wintberg,two_feeders
+STTJ,8B,St. Thomas,7th Day Street,whole
+STTJ,8B,St. Thomas,Coast Guard Bldg.,whole
+STTJ,8B,St. Thomas,Emancipation Gardens Park,whole
+STTJ,8B,St. Thomas,Government Parking Lot,whole
+STTJ,8B,St. Thomas,Legislature Building,whole
+STTJ,8B,St. Thomas,Ron De Lugo Federal Building,whole
+STTJ,8B,St. Thomas,Superior Court,whole
+STTJ,8B,St. Thomas,Vendor's Plaza,whole
+STTJ,8B,St. Thomas,Veteran's Drive Fire Station,whole
+STTJ,9B,St. Thomas,1st Street,whole
+STTJ,9B,St. Thomas,2nd Street,whole
+STTJ,9B,St. Thomas,3rd Street,whole
+STTJ,9B,St. Thomas,4th Street,whole
+STTJ,9B,St. Thomas,6th Street,whole
+STTJ,9B,St. Thomas,A. C. Ottley Post Ofc.,whole
+STTJ,9B,St. Thomas,Barbel Plaza,whole
+STTJ,9B,St. Thomas,C.A.H.S.,whole
+STTJ,9B,St. Thomas,Estate Thomas,whole
+STTJ,9B,St. Thomas,Foot Hill Bldg.,whole
+STTJ,9B,St. Thomas,Kimelman Cancer Ct.,whole
+STTJ,9B,St. Thomas,Lockhart School,whole
+STTJ,9B,St. Thomas,Paragon Bldg.,whole
+STTJ,9B,St. Thomas,RLS Hospital,whole
+STTJ,9B,St. Thomas,Senior Aff. Homes,whole
+STTJ,9B,St. Thomas,VI Daily News,whole
+STTJ,9C,St. Thomas,Al Cohen Raphune Hill,whole
+STTJ,9C,St. Thomas,Brookman,whole
+STTJ,9C,St. Thomas,Charlotte Amalie,whole
+STTJ,9C,St. Thomas,Cost-U-Less,whole
+STTJ,9C,St. Thomas,Doctor's Park,whole
+STTJ,9C,St. Thomas,Donoe,whole
+STTJ,9C,St. Thomas,Hoffman,two_feeders
+STTJ,9C,St. Thomas,Home Depot,whole
+STTJ,9C,St. Thomas,Langsmath,whole
+STTJ,9C,St. Thomas,Mandahl,two_feeders
+STTJ,9C,St. Thomas,Mahogany Run / Estate Lovenlund,two_feeders
+STTJ,9C,St. Thomas,Mariendahl,whole
+STTJ,9C,St. Thomas,Masa,whole
+STTJ,9C,St. Thomas,Nadir,two_feeders
+STTJ,9C,St. Thomas,New Her Nut,whole
+STTJ,9C,St. Thomas,Pricesmart,whole
+STTJ,9C,St. Thomas,Wintberg Peak / Wintberg Garden,whole
+STTJ,9C,St. Thomas,Yvonne Bowsky School,whole
+STTJ,9C,St. Thomas,American Yacht Harbor,whole
+STTJ,9C,St. Thomas,National Guard,whole
+STTJ,9C,St. Thomas,Nazareth,three_feeders
+STTJ,9C,St. Thomas,Point Pleasant Resort,whole
+STTJ,9C,St. Thomas,Red Hook,whole
+STTJ,9C,St. Thomas,Kean High School,whole
+STTJ,9C,St. Thomas,Sapphire,whole
+STTJ,9C,St. Thomas,Smith Bay,two_feeders
+STTJ,9C,St. Thomas,Red Hook Plaza,whole
+STTJ,9C,St. Thomas,Benner Hill,whole
+STTJ,9C,St. Thomas,Bovoni,whole
+STTJ,9C,St. Thomas,Bovoni Dump,whole
+STTJ,9C,St. Thomas,Compass Point,whole
+STTJ,9C,St. Thomas,C.E. Phipps Racetrack,whole
+STTJ,9C,St. Thomas,Foodtown,whole
+STTJ,9C,St. Thomas,Frydenhoj,whole
+STTJ,9C,St. Thomas,Gold Hill,whole
+STTJ,9C,St. Thomas,Thomasville,whole
+STTJ,9C,St. Thomas,Bovoni Warehouse,whole
+STTJ,9C,St. Thomas,Anchorage Villas,whole
+STTJ,9C,St. Thomas,Cabrita Point,whole
+STTJ,9C,St. Thomas,Cowpet Resort,whole
+STTJ,9C,St. Thomas,Elysian Hotel,whole
+STTJ,9C,St. Thomas,Montessori School,whole
+STTJ,9C,St. Thomas,Nazareth / Water Pt.,whole
+STTJ,9C,St. Thomas,Ridge Road,whole
+STTJ,9C,St. Thomas,Ritz Carlton Hotel,off_grid
+STTJ,9C,St. Thomas,Secret Harbor,whole
+STTJ,10B,St. Thomas,Antilles School,whole
+STTJ,10B,St. Thomas,Estate Bakkeroe,whole
+STTJ,10B,St. Thomas,BCB Middle School,whole
+STTJ,10B,St. Thomas,Bolongo,whole
+STTJ,10B,St. Thomas,Bovoni Warehouse,whole
+STTJ,10B,St. Thomas,Estate Thomas,three_feeders
+STTJ,10B,St. Thomas,Frenchman's Reef,off_grid
+STTJ,10B,St. Thomas,Flag Hill,whole
+STTJ,10B,St. Thomas,Frenchman's Bay,whole
+STTJ,10B,St. Thomas,Green Cay Marina,whole
+STTJ,10B,St. Thomas,Havensight,whole
+STTJ,10B,St. Thomas,Hawk Hill,whole
+STTJ,10B,St. Thomas,Limetree Beach Resort,whole
+STTJ,10B,St. Thomas,PMP Gardens,two_feeders
+STTJ,10B,St. Thomas,West Indian Company,whole
+STTJ,10B,St. Thomas,WAPA Business Offices,whole
+STTJ,10B,St. Thomas,Sea View Homes,whole
+STTJ,8C,St. Thomas,TUTU Substation,whole
+STTJ,Yacht Haven Grand,St. Thomas,Yacht Haven Grand FDR1,whole
+STTJ,TUTU Park,St. Thomas,TUTU Park Mall,whole
+STX,1A,St. Croix,C'ted Town,whole
+STX,1A,St. Croix,Hotel on the Cay,whole
+STX,1A,St. Croix,De Chabert Housing,whole
+STX,1A,St. Croix,Richmond,whole
+STX,1A,St. Croix,Pink Fancy Hotel,whole
+STX,1A,St. Croix,Water Gut,whole
+STX,1A,St. Croix,D.H. Jackson Terrace,whole
+STX,1A,St. Croix,WJKC,whole
+STX,2A,St. Croix,All for the Better,whole
+STX,2A,St. Croix,Anna's Hope,whole
+STX,2A,St. Croix,Castle Nugent,whole
+STX,2A,St. Croix,Coakley Bay,whole
+STX,2A,St. Croix,Cotton Valley,whole
+STX,2A,St. Croix,Eliza's Retreat,whole
+STX,2A,St. Croix,Gallows Bay,whole
+STX,2A,St. Croix,Lowry Hill,whole
+STX,2A,St. Croix,Marienhoj,whole
+STX,2A,St. Croix,Union Mt. Washington,whole
+STX,2A,St. Croix,Sally's Fancy,whole
+STX,2A,St. Croix,Solitude,whole
+STX,2A,St. Croix,Southgate,whole
+STX,2A,St. Croix,Southside of Christiansted Town,whole
+STX,2A,St. Croix,Tipperary,whole
+STX,2A,St. Croix,Turner's Hole,whole
+STX,2A,St. Croix,Richmond,whole
+STX,2A,St. Croix,Welcome - Tide Village,whole
+STX,2A,St. Croix,WJKC Radio Transmitter,whole
+STX,2A,St. Croix,WSTX Studios,whole
+STX,3A,St. Croix,Anna's Hope,whole
+STX,3A,St. Croix,Beeston Hill,whole
+STX,3A,St. Croix,Bellevue,whole
+STX,3A,St. Croix,Bugby Hole,whole
+STX,3A,St. Croix,Cane Garden,whole
+STX,3A,St. Croix,Castle Coakley,two_feeders
+STX,3A,St. Croix,Castle Nugent,two_feeders
+STX,3A,St. Croix,Catherine's Rest,whole
+STX,3A,St. Croix,Constitution Hill,two_feeders
+STX,3A,St. Croix,Golden Rock Shopping Ctr.,two_feeders
+STX,3A,St. Croix,Granard,whole
+STX,3A,St. Croix,Grange Humbug,whole
+STX,3A,St. Croix,JFK Housing,two_feeders
+STX,3A,St. Croix,Longford,whole
+STX,3A,St. Croix,Orange Grove,whole
+STX,3A,St. Croix,Pearl,whole
+STX,3A,St. Croix,Queste Verde,whole
+STX,3A,St. Croix,Work and Rest,whole
+STX,4A,St. Croix,Anna's Hope,whole
+STX,4A,St. Croix,Bay Gardens,whole
+STX,4A,St. Croix,Bellevue,whole
+STX,4A,St. Croix,Castle Coakley,whole
+STX,4A,St. Croix,Constitution Hill,whole
+STX,4A,St. Croix,Golden Rock,whole
+STX,4A,St. Croix,John F. Kennedy,whole
+STX,4A,St. Croix,La Grande Princess,whole
+STX,4A,St. Croix,Little Princess Hill,whole
+STX,4A,St. Croix,Orange Grove,whole
+STX,4A,St. Croix,Pearl,whole
+STX,4A,St. Croix,Peter's Rest,whole
+STX,4A,St. Croix,Rattan,whole
+STX,4A,St. Croix,Sion Farm,whole
+STX,4A,St. Croix,Sion Hill,whole
+STX,4A,St. Croix,Tan Tan Terrace,whole
+STX,4A,St. Croix,Work & Rest,whole
+STX,5A,St. Croix,Barren Spot,whole
+STX,5A,St. Croix,Bethlehem Village,whole
+STX,5A,St. Croix,Bonne Esperance,whole
+STX,5A,St. Croix,Candido Guadalupe,whole
+STX,5A,St. Croix,Clifton Hill,whole
+STX,5A,St. Croix,Diamond,whole
+STX,5A,St. Croix,Diamond Ruby,whole
+STX,5A,St. Croix,Flamboyant Gardens,whole
+STX,5A,St. Croix,Ginger Thomas,whole
+STX,5A,St. Croix,Juan Luis Hospital,whole
+STX,5A,St. Croix,Estate La Reine,whole
+STX,5A,St. Croix,Mary's Fancy,whole
+STX,5A,St. Croix,National Guard,whole
+STX,5A,St. Croix,Peppertree Terr,whole
+STX,5A,St. Croix,Queen Ridge Condo,whole
+STX,5A,St. Croix,Rattan,whole
+STX,5A,St. Croix,Ruby,whole
+STX,5A,St. Croix,Sion Farm,whole
+STX,5A,St. Croix,Sion Hill,whole
+STX,5A,St. Croix,Strawberry,whole
+STX,5A,St. Croix,Strawberry Hill,whole
+STX,5A,St. Croix,Sunny Acres,whole
+STX,5A,St. Croix,Sunny Isles,whole
+STX,5A,St. Croix,VIYA Offices,whole
+STX,5A,St. Croix,WAPA Office,whole
+STX,6A,St. Croix,Belvedere,whole
+STX,6A,St. Croix,Betsy's Jewel,whole
+STX,6A,St. Croix,Bonne Esperance,whole
+STX,6A,St. Croix,Blue Mountain / Little Fountain,whole
+STX,6A,St. Croix,Canaan Ridge,whole
+STX,6A,St. Croix,Cane Bay,whole
+STX,6A,St. Croix,Carib Villas,whole
+STX,6A,St. Croix,Clairmont,whole
+STX,6A,St. Croix,Colony Cove,whole
+STX,6A,St. Croix,Concordia East,whole
+STX,6A,St. Croix,Coral Princess,whole
+STX,6A,St. Croix,Cormorant Cove,whole
+STX,6A,St. Croix,Cruzan Princess,whole
+STX,6A,St. Croix,St. John,whole
+STX,6A,St. Croix,Gentle Winds,whole
+STX,6A,St. Croix,Glynn,whole
+STX,6A,St. Croix,Golden Rock,whole
+STX,6A,St. Croix,Granada Del Mar,whole
+STX,6A,St. Croix,Harborview Apts,whole
+STX,6A,St. Croix,John F. Kennedy,whole
+STX,6A,St. Croix,Judith's Fancy,whole
+STX,6A,St. Croix,La Grande Princess,whole
+STX,6A,St. Croix,La Vallee,whole
+STX,6A,St. Croix,Little Fountain,whole
+STX,6A,St. Croix,Mill Harbour,whole
+STX,6A,St. Croix,Mon Bijou,whole
+STX,6A,St. Croix,Montpellier,whole
+STX,6A,St. Croix,Morning Star,whole
+STX,6A,St. Croix,Rattan,whole
+STX,6A,St. Croix,Rus-Up-Twist,whole
+STX,6A,St. Croix,Salt River,whole
+STX,6A,St. Croix,St. C. Condo,whole
+STX,6A,St. Croix,Sugar Beach Condos,whole
+STX,6A,St. Croix,Vista Concordia,whole
+STX,6B,St. Croix,Bonne Esperance,whole
+STX,6B,St. Croix,Concordia,whole
+STX,6B,St. Croix,Glynn,whole
+STX,6B,St. Croix,La Grande Princess,whole
+STX,6B,St. Croix,Mary's Fancy,whole
+STX,6B,St. Croix,Mon Bijou,whole
+STX,6B,St. Croix,Morning Star,whole
+STX,6B,St. Croix,St. John,whole
+STX,6B,St. Croix,Vista Mar,whole
+STX,7B,St. Croix,Anna's Hope,whole
+STX,7B,St. Croix,Barren Spot,whole
+STX,7B,St. Croix,Bay Garden Apts.,whole
+STX,7B,St. Croix,Blessing,whole
+STX,7B,St. Croix,Caldwall,whole
+STX,7B,St. Croix,Castle Coakley,whole
+STX,7B,St. Croix,Clifton Hill,whole
+STX,7B,St. Croix,Constitution Hill,whole
+STX,7B,St. Croix,United Shopping Plaza,whole
+STX,7B,St. Croix,Cottage,whole
+STX,7B,St. Croix,Diamond,whole
+STX,7B,St. Croix,Diamond Ruby,whole
+STX,7B,St. Croix,Grange Hill,whole
+STX,7B,St. Croix,Karaval,whole
+STX,7B,St. Croix,Little Princess,whole
+STX,7B,St. Croix,Long Reef,whole
+STX,7B,St. Croix,New Castle Coakley,whole
+STX,7B,St. Croix,Orange Grove,whole
+STX,7B,St. Croix,Peter's Rest,whole
+STX,7B,St. Croix,Sion Farm,whole
+STX,8B,St. Croix,Breezewood Villas,whole
+STX,8B,St. Croix,Brook's Hill,whole
+STX,8B,St. Croix,Butler Bay,whole
+STX,8B,St. Croix,Campo Rico,whole
+STX,8B,St. Croix,Cane,whole
+STX,8B,St. Croix,Cane Carlton,whole
+STX,8B,St. Croix,Canebrake Apts.,whole
+STX,8B,St. Croix,Carlton,whole
+STX,8B,St. Croix,Concordia,whole
+STX,8B,St. Croix,Diamond,whole
+STX,8B,St. Croix,Enfield Green,whole
+STX,8B,St. Croix,Frederiksted,whole
+STX,8B,St. Croix,Frederikhaab,whole
+STX,8B,St. Croix,Goodhope,whole
+STX,8B,St. Croix,Ham's Bay,whole
+STX,8B,St. Croix,Hannah's Rest,whole
+STX,8B,St. Croix,Henry Rohlsen Airport,whole
+STX,8B,St. Croix,Hogensborg,whole
+STX,8B,St. Croix,Hope,whole
+STX,8B,St. Croix,La Grange,whole
+STX,8B,St. Croix,Little La Grange,whole
+STX,8B,St. Croix,Manning Bay,whole
+STX,8B,St. Croix,Marley Additions,whole
+STX,8B,St. Croix,Mar's Hill,whole
+STX,8B,St. Croix,Mountain,whole
+STX,8B,St. Croix,Mt. Washington,whole
+STX,8B,St. Croix,Northside,whole
+STX,8B,St. Croix,Prospect Hill,whole
+STX,8B,St. Croix,Prosperity,whole
+STX,8B,St. Croix,Smithfield,whole
+STX,8B,St. Croix,Sprat Hall,whole
+STX,8B,St. Croix,St. Georges,whole
+STX,8B,St. Croix,Stoney Ground,whole
+STX,8B,St. Croix,Two Brothers,whole
+STX,8B,St. Croix,Two Williams,whole
+STX,8B,St. Croix,Waldberggard,whole
+STX,8B,St. Croix,Walter I.M. Hodge,whole
+STX,8B,St. Croix,Wheel of Fortune,whole
+STX,8B,St. Croix,Whim,whole
+STX,8B,St. Croix,White Bay,whole
+STX,8B,St. Croix,White Lady,whole
+STX,8B,St. Croix,Williams Delight,whole
+STX,9B,St. Croix,Adventure,whole
+STX,9B,St. Croix,Aureo Diaz,whole
+STX,9B,St. Croix,Bethlehem,whole
+STX,9B,St. Croix,Castle Burke,whole
+STX,9B,St. Croix,Clifton Hill,whole
+STX,9B,St. Croix,Diamond,whole
+STX,9B,St. Croix,Fredenborg,whole
+STX,9B,St. Croix,Golden Grove,whole
+STX,9B,St. Croix,Industrial Park,whole
+STX,9B,St. Croix,Kingshill,whole
+STX,9B,St. Croix,Leb. Hill Villas,whole
+STX,9B,St. Croix,Lower Love,whole
+STX,9B,St. Croix,Mt. Pleasant,whole
+STX,9B,St. Croix,Negro Bay,whole
+STX,9B,St. Croix,New Works,whole
+STX,9B,St. Croix,Paradise,whole
+STX,9B,St. Croix,Plessen / Croixville,whole
+STX,9B,St. Croix,Profit,whole
+STX,9B,St. Croix,Profit Hills,whole
+STX,9B,St. Croix,St. Georges,whole
+STX,9B,St. Croix,V.I. Corp Land,whole
+STX,9B,St. Croix,Yellow Cedar,whole
+STX,10B,St. Croix,Annaly,whole
+STX,10B,St. Croix,Bethlehem,whole
+STX,10B,St. Croix,Calqouhoun,whole
+STX,10B,St. Croix,Carambola,whole
+STX,10B,St. Croix,Coble,whole
+STX,10B,St. Croix,Grove Place,whole
+STX,10B,St. Croix,Hard Labor,whole
+STX,10B,St. Croix,Hibiscus Point,whole
+STX,10B,St. Croix,Jealousy,whole
+STX,10B,St. Croix,Joly Hill,whole
+STX,10B,St. Croix,La Grange,whole
+STX,10B,St. Croix,Little La Grange,whole
+STX,10B,St. Croix,Lorraine Village,whole
+STX,10B,St. Croix,Lower Love,whole
+STX,10B,St. Croix,Montpellier,whole
+STX,10B,St. Croix,Mt. Victory,whole
+STX,10B,St. Croix,Mt. Pellier,whole
+STX,10B,St. Croix,Mutual Home,whole
+STX,10B,St. Croix,Nicholas,whole
+STX,10B,St. Croix,North Hall,whole
+STX,10B,St. Croix,Orange Grove,whole
+STX,10B,St. Croix,F'sted Oxford,whole
+STX,10B,St. Croix,Pleasant Vale,whole
+STX,10B,St. Croix,Plessen,whole
+STX,10B,St. Croix,Prosperity,whole
+STX,10B,St. Croix,River,whole
+STX,10B,St. Croix,Springfield,whole
+STX,10B,St. Croix,Two Friends,whole
+STX,10B,St. Croix,Upper Love,whole
+STX,10B,St. Croix,V.I. Corp Land,whole

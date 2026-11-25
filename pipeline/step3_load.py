@@ -7,6 +7,7 @@ Creates the "raw" schema that dbt reads from:
     raw.point_places                               each map point -> Census county subdivision
     raw.ref_daily, raw.ref_events, raw.ref_records VI Update's own results (for dbt's checks)
     raw.source_health                              the collectors' health file
+    raw.schedule_windows, raw.schedule_versions    WAPA's rotation schedules, as saved by step 2b
 
 Placing points: WAPA gives each outage record a map point. We test each distinct point
 against the Census Bureau's 2023 county subdivisions (Christiansted, Tutu, Cruz Bay ...)
@@ -107,6 +108,22 @@ def main():
     con.execute("create or replace table raw.poll_log as " + (
         f"select * from {log}" if log else
         "select ''::varchar poll_utc, ''::varchar endpoint, true ok, 0 ms, ''::varchar error where false"))
+
+    # WAPA's rotation schedules (step 2b). Empty tables with the right columns until the
+    # first schedule has been saved, so dbt always has something to read.
+    win = live("schedules/windows")
+    con.execute("create or replace table raw.schedule_windows as " + (
+        f"select * from {win}" if win else
+        "select ''::varchar sha256, ''::varchar first_seen_utc, 0 page, ''::varchar district, ''::varchar schedule_date, "
+        "''::varchar window_label, ''::varchar window_start_ast, ''::varchar window_end_ast, ''::varchar feeder, "
+        "false partial, ''::varchar area where false"))
+    ver = live("schedules/versions")
+    con.execute("create or replace table raw.schedule_versions as " + (
+        f"select * exclude (words_json) from {ver}" if ver else
+        "select ''::varchar sha256, ''::varchar url, ''::varchar first_seen_utc, ''::varchar last_seen_utc, 0 bytes, "
+        "''::varchar pdf_created, ''::varchar districts, ''::varchar schedule_dates, 0 windows, ''::varchar parse_error, "
+        "''::varchar original_saved_as where false"))
+    print(f"  raw.schedule_windows {con.execute('select count(*) from raw.schedule_windows').fetchall()[0][0]:>9,} rows")
 
     for t in ["ref_daily", "ref_events", "ref_records", "ref_holes"]:
         con.execute(f"create or replace table raw.{t} as select * from read_parquet('{ARCHIVE / t}.parquet')")

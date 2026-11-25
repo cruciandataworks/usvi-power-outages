@@ -110,9 +110,39 @@ def main():
           (select count(*) from staging.stg_ref_records r join intermediate.int_record_district o using (record_id)
             where o.district = r.district) as records_matching
     """)
+    # ---------------------------------------------------------------- feeders
+    feeder_share = one(con, """
+        select count(*) filter (where feeder is not null) as feeder_records, count(*) as records,
+               round(100.0 * sum(max_customers_out) filter (where feeder is not null) / sum(max_customers_out), 1)
+                   as feeder_pct_of_customers
+        from marts.mart_records""")
+    scorecard = rows(con, """
+        select district, feeder, island, in_listing, places, shared_places, outages, hours_out,
+               median_hours, longest_hours, peak_customers, power_supply_outages, power_supply_hours,
+               no_cause_outages, last_outage_ast, out_now, outages_last_30d, power_supply_vs_median
+        from marts.mart_feeder_scorecard order by district desc, hours_out desc""")
+    # compact rows for the calendar: [district, feeder, date, hours out, power-supply hours, outages begun]
+    fdaily = [[r["district"], r["feeder"], r["date_ast"], r["hours_out"], r["power_supply_hours"] or 0, r["outages_started"]]
+              for r in rows(con, "select * from marts.mart_feeder_daily order by date_ast")]
+    places = [[r["district"], r["feeder"], r["place"], r["split"]]
+              for r in rows(con, "select * from reference.feeder_places order by district, feeder, place")]
+    schedule = rows(con, """
+        select kind, district, schedule_date, window_label, window_start_ast, window_end_ast, feeder, partial, area,
+               versions_of_day, start_ast, end_ast, hours, cause, start_offset_min, end_offset_min, still_on_map, outcome
+        from marts.mart_schedule_check
+        where coalesce(schedule_date, cast(start_ast as date)) >=
+              (select max(schedule_date) from marts.mart_schedule_check) - interval 13 day
+        order by coalesce(window_start_ast, start_ast), feeder""")
+    schedule_meta = one(con, """
+        select count(*) as versions, min(first_seen_utc) as first_saved_utc, max(last_seen_utc) as last_checked_utc,
+               (select count(distinct schedule_date) from intermediate.int_schedule_final) as days,
+               (select max(schedule_date) from intermediate.int_schedule_final) as latest_date
+        from staging.stg_schedule_versions""")
+    feeders = dict(share=feeder_share, scorecard=scorecard, daily=fdaily, places=places,
+                   schedule=schedule, schedule_meta=schedule_meta)
     data = dict(meta=meta, current=current, on_map=on_map, recent=recent, hourly=hourly, daily=daily,
                 monthly=monthly, events=events, totals=totals, areas=areas, causes=causes, gaps=gaps,
-                alerts=alerts, health=health, checks=checks)
+                alerts=alerts, health=health, checks=checks, feeders=feeders)
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, separators=(",", ":"), default=str))
     print(f"  wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1024:.0f} KB)")

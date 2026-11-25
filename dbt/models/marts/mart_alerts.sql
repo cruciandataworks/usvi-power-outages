@@ -38,7 +38,17 @@ collector as (
            last_attempt_utc
     from {{ ref('stg_source_health') }}
     where source = 'wapa_map' and consecutive_failures >= {{ var('max_consecutive_failures') }}
+),
+schedule as (  -- low priority: the rest of the page does not depend on it
+    select 'collector:' || source, 'data', 'low',
+           'Cannot read WAPA''s rotation schedule',
+           'The last ' || consecutive_failures || ' runs could not download or read WAPA''s rotation schedule. Last error: '
+               || coalesce(last_error, 'none recorded') || '.',
+           last_attempt_utc
+    from {{ ref('stg_source_health') }}
+    where source = 'wapa_schedule' and consecutive_failures >= 8
 )
 select * from outage
 union all select * from stale
 union all select * from collector
+union all select * from schedule

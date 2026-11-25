@@ -22,10 +22,12 @@ VI Update saved it every 5 minutes for seven and a half months and published the
 1. **Rebuilds VI Update's numbers from the raw snapshots** with tested SQL, and proves the rebuild matches their published tables. This is the kind of check a client would want before trusting a dashboard.
 2. **Continues the record** by polling WAPA's map itself every 5 minutes.
 3. **Watches it**: a GitHub issue opens when a district loses power or the map stops updating.
+4. **Goes feeder by feeder** (added 25 November 2026): which neighborhoods are on which feeder, how often each feeder goes out, whether rotations are shared fairly, and whether WAPA kept to its published schedule. See Step 4b.
 
 ```
 Zenodo (VI Update archive) ─► 1 archive ─┐
-WAPA outage map (live) ──────► 2 poll ────┼─► Parquet lake ─► 3 load DuckDB ─► 4 dbt models + tests
+WAPA outage map (live) ──────► 2 poll ────┤
+WAPA schedule PDF ───────────► 2b save ───┼─► Parquet lake ─► 3 load DuckDB ─► 4 dbt models + tests
                                           │   (+ Census map)                           │
                                           │            dashboard ◄─ 5 export JSON ◄────┤
                                           │        GitHub issues ◄─ 6 sync alerts ◄────┘
@@ -73,11 +75,12 @@ pipeline/
   common.py          shared helpers: lake paths, HTTP with retries, privacy filter, upsert
   step1_archive.py   download + verify VI Update's archive, write it to the lake
   step2_poll.py      poll WAPA's live map
+  step2b_schedule.py save every version of WAPA's rotation schedule PDF
   step3_load.py      load the lake into DuckDB, place map points in Census areas
   step5_export.py    write dashboard/data/summary.json
   step6_alerts.py    open / update / close GitHub issues
 dbt/
-  seeds/             district_reference.csv (customers per district)
+  seeds/             district_reference.csv (customers per district), feeder_places.csv (WAPA's Feeder Listing)
   models/staging     one clean view per raw table
   models/intermediate  the rules: which district, which polls count, midnight splits
   models/marts       the tables the dashboard uses
@@ -284,6 +287,89 @@ Outage alerts only fire on a live snapshot from the last 3 hours, so rebuilding 
 
 ---
 
+## Step 4b: Feeder by feeder
+
+**Goal:** answer the questions people actually ask during rotating outages. Which feeder am I on? Is my feeder going out more than others? Did WAPA keep to its schedule?
+
+### What a feeder is
+
+A feeder is one power line leaving a substation. It serves a fixed set of neighborhoods. When WAPA does not have enough generation, it switches whole feeders off in turns. That is a rotating outage, also called load shedding. WAPA's map names these outages after the feeder ("Feeder 07C", "STX Feeder 09B"), and it labels the cause code `000` "Power supply".
+
+Two facts make feeders worth a chapter:
+
+- **Few outages, most of the pain.** Only 785 of the 7,676 outages on the map were whole feeders. But they account for about 73% of the customers affected, because one feeder can cover thousands of homes.
+- **Every customer on a feeder lives the same outage.** If Feeder 7C was out for 208 hours, so was each customer on it. That makes feeder hours a fair way to compare neighborhoods.
+
+### The hand-typed seed: `dbt/seeds/feeder_places.csv`
+
+WAPA publishes a [Feeder Listing](https://www.viwapa.vi/customer-service/feeder-listing) as two PDFs, one for [St. Thomas–St. John](https://www.viwapa.vi/docs/default-source/default-document-library/feeder_listings---stj-stt.pdf?sfvrsn=74ec8718_24) and one for [St. Croix](https://www.viwapa.vi/docs/default-source/default-document-library/stx-feeder-listing.pdf?sfvrsn=4e2b4688_32), dated June 2024. They are tables of place names, and the layout does not survive automatic text extraction, so they were typed in by hand. The result is 527 rows: `district, feeder, island, place, split`.
+
+- `split` is `whole` for most places. It is `two_feeders` or `three_feeders` when WAPA lists the same place under more than one feeder (a large estate can be split), and `off_grid` for the three places WAPA marks as not normally connected.
+- A seed is a small CSV that dbt loads as a table (`reference.feeder_places`). It is the right tool for a list that changes rarely and that a person maintains.
+- **Caveat:** WAPA lists major locations only, and it has moved some neighborhoods to other feeders since 2024, as [The V.I. Consortium reported](https://viconsortium.com/vi-community_center/virgin-islands-wapa-reports-all-st--thomas-st--john-feeders-restored-after-days-of-blackouts-and-unit-27-repairs). A lookup result is "likely", not certain.
+
+### Step 2b: save WAPA's rotation schedule
+
+```bash
+python pipeline/step2b_schedule.py
+```
+
+WAPA posts its St. Thomas–St. John rotation schedule as a PDF linked from the [Alerts page](https://www.viwapa.vi/news-information/advisory-details). The catch: it [replaces the file at the same address](https://www.viwapa.vi/docs/default-source/outage-schedule/sttstj-rotational-outage-schedule-doc.pdf?sfvrsn=2c938249_428) each time the schedule changes, and old version numbers in the address return the new file. So there is no history to download. The only way to check schedules later is to save every version while it is up. This step does that:
+
+1. **Find the PDF.** It reads the Alerts page and collects links under `/docs/default-source/outage-schedule/`. If the page changes, it falls back to the known address.
+2. **Fingerprint it.** It downloads the PDF and takes its SHA-256. If the fingerprint is new, this is a new version. The PDF itself is attached to a monthly GitHub release (`schedules-2026-11`), so the original is kept.
+3. **Read only the text you can see.** This is the subtle part. The 25 November PDF had an old "Feeder 7B" label still in the file, hidden under the white card for the 4–6 PM window. A plain text extractor reads it, and the schedule would be wrong. `visible_words()` uses PyMuPDF to replay the page in drawing order. Any word that is later covered by an opaque filled shape is dropped, the same way your eyes never see it.
+4. **Rebuild the layout.** `lines_of()` groups words into lines by height on the page, then splits a line wherever there is a gap wider than 20 points. Each time window ("6 AM - 8 AM") is a column header, and each feeder is assigned to the nearest header above it. Lines that say "partial" are marked `partial`.
+5. **Write two tables.** `lake/live/schedules/versions/` has one row per PDF version, including every visible word, so the reading can be redone later. `lake/live/schedules/windows/month=YYYY-MM/` has one row per window and feeder.
+
+On 25 November this produced 40 scheduled feeder-windows across 9 time windows, which matched the PDF image exactly. Like step 2, step 2b is allowed to fail. If it fails 8 runs in a row, `mart_alerts` raises a low-level notice.
+
+St. Croix has no schedule file. Its rotations appear in WAPA press releases and in the news, for example the [24 November schedule in the Freedom City Times](https://www.freedomcitytimes.com/post/untitled-7839d7f6), so St. Croix is not checked yet.
+
+### The feeder models
+
+| Model | One row per | What it does |
+|---|---|---|
+| `int_schedule_final` | district, day, window, feeder | keeps only the latest schedule version for each day, since WAPA often revises a day's plan |
+| `mart_feeder_outages` | feeder outage | start = WAPA's start time, end = the last poll that still showed it. A record that claimed to start before our record began (one 7C outage says 17 February) is counted from the first poll, so it cannot add hours nobody saw. `is_power_supply` = cause code `000`. |
+| `mart_feeder_daily` | feeder and day | splits each outage's hours across the days it spans, so an outage from 8 PM to 8 AM counts 4 hours on one day and 8 on the next |
+| `mart_feeder_scorecard` | feeder | outages, hours out, median length, peak customers out, power-supply hours, last outage, out now, and `power_supply_vs_median`: that feeder's power-supply hours divided by the median feeder's in the same district |
+| `mart_schedule_check` | scheduled feeder-window, plus unexplained power-supply outages | compares the schedule with the map (rules below) |
+
+### The matching rules
+
+A scheduled feeder matches an outage of the same feeder that overlaps the window, allowing 30 minutes on either side. WAPA says restoration may run up to 20 minutes late, so that is the allowance at the end. If several outages match, the one that started closest to the window wins.
+
+| Outcome | Meaning |
+|---|---|
+| As scheduled | started within 30 minutes of the window and cleared within 20 minutes after it |
+| Ran long | started on time but was still on the map more than 20 minutes after the window |
+| Started early / late | an outage overlapped the window but began more than 30 minutes away from it |
+| Still out | the matched outage is still on the map |
+| Not seen | no whole-feeder outage appeared. WAPA notes that "not all feeders listed may be affected", and a partial cut shows on the map under a switch code, not the feeder. |
+| Upcoming | the window has not ended yet |
+| Not recorded | we were not polling at the time |
+| Not on the schedule | a power-supply outage of a feeder on a scheduled day that no window explains |
+
+### What you see on the dashboard
+
+- **Facts:** feeders tracked, the 73% share, the worst feeder and the number of power-supply outages.
+- **Which feeder am I on?** Type a place. The search ignores accents, capitals and apostrophes, and treats "Est." as "Estate". It shows the feeder or feeders, any split note, that feeder's record and its windows on the latest schedule.
+- **Rotation schedule vs the map:** one row per scheduled feeder-window with its outcome, and a day picker once more than one day has been saved.
+- **Feeder scorecard:** sortable by any column. Places marked * are split between feeders.
+- **Rotation calendar:** feeders down the side, days across. Coral means power-supply hours that day, teal means other or no cause, and darker means longer. Hatched days were not recorded.
+- **Is the rotation shared fairly?** Power-supply hours per feeder with the district median as a dashed line. Coral bars are 1.5 times the median or more. On St. Thomas–St. John, 7C carried about 3.4 times the typical feeder.
+
+### Caveats to say out loud
+
+- Most feeder outages on the map list no cause, so some rotations are counted as "other". The power-supply totals are a floor.
+- A rotation that cut only part of a feeder appears under a switch name, not the feeder.
+- "Hours out" ends when the map cleared the outage, which is not always the minute power came back.
+- The neighborhood list is from 2024 and lists major places only.
+- Schedule checks start on 25 November 2026, the first day the pipeline saved the PDF.
+
+---
+
 ## Step 5: Export for the dashboard
 
 ```bash
@@ -291,14 +377,15 @@ python pipeline/step5_export.py
 python -m http.server 8804 -d dashboard     # open http://localhost:8804
 ```
 
-The dashboard is a static page with no database behind it. This step writes everything it needs to `dashboard/data/summary.json` (about 85 KB). That includes:
+The dashboard is a static page with no database behind it. This step writes everything it needs to `dashboard/data/summary.json` (about 185 KB). That includes:
 
 - right now: customers out by district, and the largest outages on the map;
 - WAPA's 48-hour history and our recent polls;
 - the daily, monthly and event tables;
 - totals by area and by cause;
 - gaps, alerts and collector health;
-- the match counts against VI Update.
+- the match counts against VI Update;
+- `feeders`: the scorecard, the daily feeder hours (as compact arrays to keep the file small), the place list and the last 14 days of schedule checks.
 
 ---
 
@@ -321,11 +408,11 @@ This step is the same as Project 3's step 7, pointed at a different database and
 ## Step 7: Run everything with one command
 
 ```bash
-python run_pipeline.py            # all six steps
+python run_pipeline.py            # all steps, including 2b
 python run_pipeline.py --from 3   # skip download and polling, rebuild from the lake
 ```
 
-`run_pipeline.py` runs steps 1–6 in order. Only step 2 is allowed to fail. If anything from step 3 on fails, the run stops, so a broken build never replaces good data on the website. Set `TEST_FAILURE=true` to fail on purpose and test the failure alert.
+`run_pipeline.py` runs steps 1–6 in order. Only steps 2 and 2b are allowed to fail. If anything from step 3 on fails, the run stops, so a broken build never replaces good data on the website. Set `TEST_FAILURE=true` to fail on purpose and test the failure alert.
 
 ---
 

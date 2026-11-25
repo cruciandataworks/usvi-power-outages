@@ -21,3 +21,17 @@ models:
     columns:
       - name: hour_ast
         tests: [unique, not_null]
+  - name: stg_schedule_windows
+    tests:
+      - unique_combination: {arguments: {columns: [sha256, page, window_start_ast, feeder]}}
+    columns:
+      - name: district
+        tests: [not_null, {accepted_values: {arguments: {values: [STX, STTJ]}}}]
+      - name: feeder
+        tests: [not_null]
+      - name: window_end_ast
+        tests: [not_null]
+  - name: stg_schedule_versions
+    columns:
+      - name: sha256
+        tests: [unique, not_null]

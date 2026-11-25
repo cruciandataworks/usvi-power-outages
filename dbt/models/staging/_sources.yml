@@ -23,3 +23,7 @@ sources:
         description: VI Update's gaps, stale runs and partial polls (labeled/holes.csv).
       - name: source_health
         description: The collectors' health file.
+      - name: schedule_windows
+        description: One row per (schedule version, window, feeder) read from WAPA's rotation-schedule PDFs (step 2b).
+      - name: schedule_versions
+        description: One row per distinct rotation-schedule PDF downloaded, by SHA-256.

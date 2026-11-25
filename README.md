@@ -10,10 +10,11 @@ Live dashboard: [cruciandataworks.com/projects/power-outages](https://cruciandat
 
 1. **Archive.** It downloads [The WAPA Outage Record](https://doi.org/10.5281/zenodo.24094228) (Brian Louden, VI Update, CC0) and checks its SHA-256 fingerprint. The archive holds 65,446 snapshots of WAPA's map saved every 5 minutes from 23 March to 7 November 2026. VI Update's findings are in [their report](https://zenodo.org/records/24094226).
 2. **Poll.** It reads WAPA's live outage map (`outageSummary`, `outages`, `outagePolygons`) three times per run, five minutes apart, so the record continues after the archive ends.
-3. **Load.** It loads the Parquet lake into DuckDB and places every outage point in a 2023 Census county subdivision.
-4. **Model and test.** It rebuilds daily customer-hours, district-wide and major outages, coverage gaps and alerts with dbt. 41 data tests run every time, including four that compare the rebuild with VI Update's published tables.
-5. **Export.** It writes one JSON file for the static dashboard.
-6. **Alert.** It opens a GitHub issue when 25% or more of a district is out, when WAPA's map stops updating, or when the collector fails 4 runs in a row. It closes the issue when the condition clears.
+3. **Save the rotation schedule.** It saves every version of WAPA's St. Thomas–St. John rotating-outage schedule PDF, because WAPA overwrites it at the same address. It reads only the text you can see (one version hid an old feeder label under a white box) and keeps the original PDF in a monthly release.
+4. **Load.** It loads the Parquet lake into DuckDB and places every outage point in a 2023 Census county subdivision.
+5. **Model and test.** It rebuilds daily customer-hours, district-wide and major outages, coverage gaps and alerts with dbt. 61 data tests run every time, including four that compare the rebuild with VI Update's published tables.
+6. **Export.** It writes one JSON file for the static dashboard.
+7. **Alert.** It opens a GitHub issue when 25% or more of a district is out, when WAPA's map stops updating, or when the collector fails 4 runs in a row. It closes the issue when the condition clears.
 
 ## Results (first build, 20 November 2026)
 
@@ -26,6 +27,16 @@ Live dashboard: [cruciandataworks.com/projects/power-outages](https://cruciandat
 | dbt | 1 seed, 22 models, 41 data tests, all passing |
 
 Over the 218 days captured, the average St. Thomas–St. John customer was without power for about 196 hours, compared with about 31 hours on St. Croix. There were 14 district-wide outages on St. Thomas–St. John and 8 on St. Croix. WAPA gave no cause for 92% of the outages on its map.
+
+## Feeder by feeder (added 25 November 2026)
+
+- **Which feeder am I on?** A search over 527 places from WAPA's June 2024 [Feeder Listing](https://www.viwapa.vi/customer-service/feeder-listing), typed in as a dbt seed.
+- **Feeder scorecard.** Outages, hours out, typical length, size and rotation hours for every feeder.
+- **Rotation calendar.** Each feeder's hours out, day by day.
+- **Fairness check.** Power-supply hours per feeder against the district median. On St. Thomas–St. John, Feeder 7C carried about 3.4 times the typical feeder.
+- **Schedule vs map.** Each feeder on WAPA's published rotation schedule, checked against WAPA's own map, from 25 November 2026 on.
+
+Whole-feeder outages were only 785 of 7,676 outages on the map, but they covered about 73% of the customers affected.
 
 ## Privacy
 
@@ -45,8 +56,8 @@ The full beginner walkthrough is in [docs/STEP_BY_STEP.md](docs/STEP_BY_STEP.md)
 ## Layout
 
 ```
-pipeline/   step1_archive.py  step2_poll.py  step3_load.py  step5_export.py  step6_alerts.py  common.py
-dbt/        staging -> intermediate -> marts, plus tests/ that check against VI Update
+pipeline/   step1_archive.py  step2_poll.py  step2b_schedule.py  step3_load.py  step5_export.py  step6_alerts.py  common.py
+dbt/        seeds (feeder_places.csv) -> staging -> intermediate -> marts, plus tests/ that check against VI Update
 dashboard/  index.html  app.js  power.css  styles.css  data/summary.json
 .github/workflows/refresh.yml   every 15 minutes
 ```

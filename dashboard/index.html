@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>USVI Power Outages · Crucian Data Works</title>
-<meta name="description" content="How often the power goes out in the U.S. Virgin Islands: customers out right now, every district-wide outage since March 2026, and customer-hours by area, from WAPA's public outage map. A Crucian Data Works portfolio project.">
+<meta name="description" content="How often the power goes out in the U.S. Virgin Islands: customers out right now, every district-wide outage since March 2026, customer-hours by area, and a feeder-by-feeder record of rotating outages, from WAPA's public outage map. A Crucian Data Works portfolio project.">
 <link rel="icon" href="cdw-icon-app-tile.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
@@ -103,6 +103,98 @@ a.brand{color:inherit;text-decoration:none}
     <p class="fine-inline" id="eventNote"></p>
   </section>
 
+  <!-- ================= Feeder by feeder ================= -->
+  <section class="card feeder-intro" id="feeders">
+    <header class="card-h row">
+      <div>
+        <p class="eyebrow">Feeder by feeder</p>
+        <h2 class="h2-lg">Which parts of the grid lose power most?</h2>
+        <p>WAPA's grid is divided into feeders: lines that leave a substation and serve a set of neighborhoods. When generation runs short, WAPA switches whole feeders off in turns, which is what a rotating outage is.</p>
+      </div>
+      <div class="toggle fToggle" role="group" aria-label="District">
+        <button data-k="STTJ" aria-pressed="true">St. Thomas–St. John</button>
+        <button data-k="STX" aria-pressed="false">St. Croix</button>
+      </div>
+    </header>
+    <div class="facts" id="feederFacts"></div>
+  </section>
+
+  <section class="grid two">
+    <article class="card" id="lookup">
+      <header class="card-h"><h2>Which feeder am I on?</h2><p>Type a neighborhood, estate or landmark from WAPA's Feeder Listing</p></header>
+      <label class="look-l" for="placeInput">Neighborhood</label>
+      <input id="placeInput" class="look-in" type="search" autocomplete="off" placeholder="For example Anna's Retreat, Frederiksted or Cruz Bay" list="placeList">
+      <datalist id="placeList"></datalist>
+      <div id="lookResult" class="look-res" aria-live="polite"></div>
+      <p class="fine-inline">From WAPA's <a class="src" href="https://www.viwapa.vi/customer-service/feeder-listing" target="_blank" rel="noopener">Feeder Listing</a> (updated June 2024). WAPA lists major locations only, and has since moved some neighborhoods to other feeders, so treat a match as likely rather than certain.</p>
+    </article>
+    <article class="card" id="schedule">
+      <header class="card-h row">
+        <div><h2>Rotation schedule vs the map</h2><p id="schedSub">WAPA's published rotating-outage schedule, checked against its own outage map</p></div>
+        <select id="schedDay" class="sel" aria-label="Schedule date"></select>
+      </header>
+      <div class="sched-sum" id="schedSum"></div>
+      <div class="table-wrap sched-wrap">
+        <table class="tbl" id="tSched">
+          <thead><tr><th>Window</th><th>Feeder</th><th>What WAPA's map showed</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="fine-inline" id="schedNote"></p>
+    </article>
+  </section>
+
+  <section class="card">
+    <header class="card-h row">
+      <div><h2>Feeder scorecard</h2><p>Every whole-feeder outage on WAPA's map since March 2026 · click a column to sort</p></div>
+      <div class="toggle fToggle" role="group" aria-label="District">
+        <button data-k="STTJ" aria-pressed="true">St. Thomas–St. John</button>
+        <button data-k="STX" aria-pressed="false">St. Croix</button>
+      </div>
+    </header>
+    <div class="table-wrap">
+      <table class="tbl sortable" id="tFeeders">
+        <thead><tr>
+          <th data-s="feeder">Feeder</th><th data-s="places" class="hide-sm">Neighborhoods</th>
+          <th data-s="outages" class="n">Outages</th><th data-s="hours_out" class="n">Hours out</th>
+          <th data-s="median_hours" class="n">Typical</th><th data-s="peak_customers" class="n hide-sm">Customers</th>
+          <th data-s="power_supply_hours" class="n">Rotation hours</th><th data-s="last_outage_ast">Last out</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="fine-inline" id="feederNote"></p>
+  </section>
+
+  <section class="card">
+    <header class="card-h row">
+      <div><h2>Rotation calendar</h2><p>Hours each feeder was out, day by day (AST) · coral = WAPA gave "Power supply" (not enough generation) as the cause</p></div>
+      <div class="toggle fToggle" role="group" aria-label="District">
+        <button data-k="STTJ" aria-pressed="true">St. Thomas–St. John</button>
+        <button data-k="STX" aria-pressed="false">St. Croix</button>
+      </div>
+    </header>
+    <div class="cal-wrap"><canvas id="cCal" aria-label="Calendar of feeder outages by day"></canvas><div class="cal-tip" id="calTip" hidden></div></div>
+    <div class="cal-key">
+      <span><i style="background:#F6D3C9"></i><i style="background:#E8836B"></i><i style="background:#C8553D"></i><i style="background:#8E3524"></i>Power supply: under 1 h, 1–3 h, 3–8 h, 8 h+</span>
+      <span><i style="background:#CFE3E4"></i><i style="background:#8CC2C4"></i><i style="background:#2F7F86"></i><i style="background:#1D5257"></i>Other or no cause given</span>
+      <span><i class="hatch"></i>Not recorded</span>
+    </div>
+    <p class="fine-inline" id="calNote"></p>
+  </section>
+
+  <section class="card">
+    <header class="card-h row">
+      <div><h2>Is the rotation shared fairly?</h2><p>Hours of power-supply outages per feeder since March · the dashed line is the typical (median) feeder in the district</p></div>
+      <div class="toggle fToggle" role="group" aria-label="District">
+        <button data-k="STTJ" aria-pressed="true">St. Thomas–St. John</button>
+        <button data-k="STX" aria-pressed="false">St. Croix</button>
+      </div>
+    </header>
+    <div class="chart" id="fairBox"><canvas id="cFair" aria-label="Power-supply outage hours by feeder"></canvas></div>
+    <p class="fine-inline" id="fairNote"></p>
+  </section>
+
   <section class="grid two-uneven">
     <article class="card">
       <header class="card-h"><h2>Where the hours were lost</h2><p>Customer-hours out by Census county subdivision, March to November 2026</p></header>
@@ -148,7 +240,7 @@ a.brand{color:inherit;text-decoration:none}
     </div>
     <ol>
       <li><b>1</b>Download VI Update's archive from Zenodo and verify it</li>
-      <li><b>2</b>Poll WAPA's outage map (three times per run)</li>
+      <li><b>2</b>Poll WAPA's outage map (three times per run) and save its rotation schedule</li>
       <li><b>3</b>Load the lake into DuckDB and place each outage on the Census map</li>
       <li><b>4</b>Model and test with dbt, including the match to VI Update</li>
       <li><b>5</b>Export JSON for this page</li>
@@ -165,7 +257,7 @@ a.brand{color:inherit;text-decoration:none}
     </a>
     <div class="contact">Roger Simon · <a href="mailto:hello@cruciandataworks.com">hello@cruciandataworks.com</a></div>
   </div>
-  <p class="wrap fine">Data: March to November 2026 from <a href="https://doi.org/10.5281/zenodo.24094228" target="_blank" rel="noopener">The WAPA Outage Record</a> by Brian Louden, VI Update (CC0), described in <a href="https://zenodo.org/records/24094226" target="_blank" rel="noopener">VI Update's report</a>; since then from the <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">Virgin Islands Water and Power Authority</a> outage map. District customer counts are the ones VI Update uses. WAPA's map is the original source and can lag or miss outages; this page is an independent analysis. <span id="built"></span></p>
+  <p class="wrap fine">Data: March to November 2026 from <a href="https://doi.org/10.5281/zenodo.24094228" target="_blank" rel="noopener">The WAPA Outage Record</a> by Brian Louden, VI Update (CC0), described in <a href="https://zenodo.org/records/24094226" target="_blank" rel="noopener">VI Update's report</a>; since then from the <a href="https://www.viwapa.vi/" target="_blank" rel="noopener">Virgin Islands Water and Power Authority</a> outage map. District customer counts are the ones VI Update uses. Neighborhoods by feeder are from WAPA's <a href="https://www.viwapa.vi/customer-service/feeder-listing" target="_blank" rel="noopener">Feeder Listing</a> (June 2024); rotation schedules are from WAPA's <a href="https://www.viwapa.vi/news-information/advisory-details" target="_blank" rel="noopener">Alerts page</a>, saved by this pipeline since November 25, 2026. WAPA's map is the original source and can lag or miss outages; this page is an independent analysis. <span id="built"></span></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

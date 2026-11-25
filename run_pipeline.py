@@ -3,7 +3,7 @@
     python run_pipeline.py            # full run: poll WAPA, rebuild, export, alerts
     python run_pipeline.py --from 3   # skip polling, rebuild from the lake
 
-Step 2 (polling WAPA) may fail - WAPA's map is sometimes down. That is recorded (the
+Steps 2 and 2b (polling WAPA's map, saving its rotation schedule) may fail - WAPA's map is sometimes down. That is recorded (the
 dashboard shows it, and four failed runs in a row raise an alert) and the rest still
 runs, so the page keeps showing the history. Any failure from step 3 on stops the run,
 so bad data never reaches the dashboard.
@@ -19,6 +19,7 @@ PY = sys.executable
 STEPS = [
     (1, "Archive (VI Update's record, from Zenodo)", [PY, "pipeline/step1_archive.py"], False),
     (2, "Poll WAPA's outage map", [PY, "pipeline/step2_poll.py"], True),
+    ("2b", "Save WAPA's rotation schedule", [PY, "pipeline/step2b_schedule.py"], True),
     (3, "Load DuckDB", [PY, "pipeline/step3_load.py"], False),
     (4, "dbt build (models + tests)", ["dbt", "build", "--profiles-dir", "."], False),
     (5, "Export dashboard data", [PY, "pipeline/step5_export.py"], False),
@@ -34,7 +35,7 @@ def main():
         print("TEST_FAILURE is set - failing on purpose to test the failure alert.")
         sys.exit(1)
     for n, label, cmd, tolerant in STEPS:
-        if n < args.start:
+        if int(str(n).rstrip("b")) < args.start:
             continue
         print(f"\n=== Step {n}: {label} ===", flush=True)
         cwd = ROOT / "dbt" if cmd[0] == "dbt" else ROOT  # dbt finds DuckDB relative to dbt/

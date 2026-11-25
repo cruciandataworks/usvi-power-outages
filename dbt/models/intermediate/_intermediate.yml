@@ -16,3 +16,7 @@ models:
     columns:
       - name: hours
         tests: [not_null]
+  - name: int_schedule_final
+    description: The last saved version of each day's rotation schedule.
+    tests:
+      - unique_combination: {arguments: {columns: [district, window_start_ast, feeder]}}

@@ -10,3 +10,17 @@ seeds:
         tests: [unique, not_null]
       - name: reference_customers
         tests: [not_null]
+  - name: feeder_places
+    description: >
+      Neighborhoods and landmarks on each feeder, typed by hand from WAPA's Feeder Listing
+      PDFs ("Updated June 2024", https://www.viwapa.vi/customer-service/feeder-listing).
+      WAPA says the listing shows major locations and may not include every section of a
+      feeder, and that some neighborhoods have since been moved to other feeders.
+      split: whole, two_feeders (*), three_feeders (**) or off_grid (*** not on the grid but can be).
+    columns:
+      - name: feeder
+        tests: [not_null]
+      - name: place
+        tests: [not_null]
+      - name: split
+        tests: [{accepted_values: {arguments: {values: [whole, two_feeders, three_feeders, off_grid]}}}]
