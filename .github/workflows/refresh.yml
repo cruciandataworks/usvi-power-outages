@@ -92,7 +92,9 @@ jobs:
           gh release view lake >/dev/null 2>&1 || \
             gh release create lake --title "Data lake (auto-updated)" \
               --notes "Our own polls of WAPA's outage map (Parquet). Replaced every run. Deleting it loses every poll since the pipeline started; VI Update's archive is rebuilt from Zenodo."
-          gh release upload lake /tmp/lake.tar.gz --clobber
+          # GitHub's API sometimes answers 502 for a moment; try three times before failing
+          for i in 1 2 3; do gh release upload lake /tmp/lake.tar.gz --clobber && exit 0; echo "upload attempt $i failed"; sleep $((i * 20)); done
+          exit 1
 
       # GitHub pauses scheduled workflows in repositories with no commits for 60 days.
       # One small commit a day (the first automatic run of the day, or any manual run) prevents that.
