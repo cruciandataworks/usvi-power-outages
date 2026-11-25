@@ -97,6 +97,8 @@ jobs:
       # GitHub pauses scheduled workflows in repositories with no commits for 60 days.
       # One small commit a day (the first automatic run of the day, or any manual run) prevents that.
       - name: Daily data commit
+        # a rejected push (main moved during the run) must never block the website upload
+        continue-on-error: true
         run: |
           # scheduled and chained runs commit only once a day; manual runs always do
           git fetch -q --deepen=200 || true   # the checkout has only the latest commit
@@ -106,7 +108,7 @@ jobs:
           git config user.email "hello@cruciandataworks.com"
           git add dashboard/data/summary.json
           git diff --cached --quiet || git commit -m "Daily power outages snapshot"
-          git push
+          git push || { git pull --rebase -q -X theirs && git push; }
 
       # Publish the refreshed dashboard to cruciandataworks.com (Hostinger) over FTP.
       # Skipped until the FTP secrets are added in Settings > Secrets and variables > Actions.
