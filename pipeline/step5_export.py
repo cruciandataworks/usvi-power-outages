@@ -148,5 +148,28 @@ def main():
     print(f"  wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size / 1024:.0f} KB)")
 
 
+def stamp_assets():
+    """Add ?v=<content hash> to the page's CSS and JS links.
+
+    The web host tells browsers to keep .js and .css files for 7 days. Without a version
+    tag, a visitor can get the new index.html with last week's app.js, and new sections
+    stay blank. The tag changes only when the file changes, so caching still works.
+    """
+    import hashlib, re
+    dash = ROOT / "dashboard"
+    page = dash / "index.html"
+    html = page.read_text(encoding="utf-8")
+    for name in ("styles.css", "power.css", "app.js"):
+        f = dash / name
+        if not f.exists():
+            continue
+        v = hashlib.sha256(f.read_bytes()).hexdigest()[:10]
+        html = re.sub(rf'((?:href|src)="){re.escape(name)}(?:\?v=[0-9a-f]+)?"', rf'\g<1>{name}?v={v}"', html)
+    if html != page.read_text(encoding="utf-8"):
+        page.write_text(html, encoding="utf-8")
+        print("  stamped asset versions in dashboard/index.html")
+
+
 if __name__ == "__main__":
     main()
+    stamp_assets()
